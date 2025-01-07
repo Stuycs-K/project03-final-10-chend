@@ -20,6 +20,6 @@ struct sembuf {
   short sem_num;
   short sem_flag;
 };
-int serversetup();
+int mainserversetup();
 int serverconnect();
 int serverhandshake();
