@@ -25,8 +25,8 @@ I will be doing everything for this project.
 
 # Intended pacing:
 
-A timeline with expected completion dates of parts of the project.
-
-1/10: Finish basic forking and servers
+1/6: Finish skeleton methods and definitions
+1/8: Finish basic forking and servers
+1/10: Finish sorting and matchmaking
 1/12: Finish basic game mechanics
 
