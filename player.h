@@ -7,3 +7,21 @@
 #include <string.h>
 #include <errno.h>
 #include <signal.h>
+union semun {
+  int val;                  //used for SETVAL
+  struct semid_ds *buf;     //used for IPC_STAT and IPC_SET
+  unsigned short  *array;   //used for SETALL
+  struct seminfo  *__buf;
+};
+
+
+struct sembuf {
+  short sem_op;
+  short sem_num;
+  short sem_flag;
+};
+
+
+char* getrandomitem();
+int random_index();
+int playerhandshake();
