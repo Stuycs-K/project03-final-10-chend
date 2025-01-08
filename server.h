@@ -21,6 +21,6 @@ struct sembuf {
   short sem_flag;
 };
 int mainserversetup();
-int serverconnect();
-int serverhandshake();
+int serverconnect(int* fromPlayer);
+
 static void ignore_SIGPIPE(int signum);

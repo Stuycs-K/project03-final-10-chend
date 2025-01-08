@@ -6,7 +6,7 @@
 int main(){
 	int toPlayer;
 	int fromPlayer;
-	toPlayer = playerhandshake(fromPlayer);
+	toPlayer = playerhandshake(&fromPlayer);
 
 }
 
@@ -32,13 +32,13 @@ int random_index(){
 }
 
 
-int playerhandshake(int fromPlayer){
+int playerhandshake(int* fromPlayer){
 	int toPlayer;
 	mkfifo("ServerToPlayer", 0666);
-	fromPlayer = open("PlayerToServer", O_WRONLY, 0);
+	*fromPlayer = open("PlayerToServer", O_WRONLY, 0);
 	int playerindex = random_index();
 	//send the server playerindex for sorting
-	write(fromPlayer, &playerindex, sizeof(int));
+	write(*fromPlayer, &playerindex, sizeof(int));
 	//print statements for debugging, will delete after
 	//printf("PLAYER SENT INDEX: %d \n", playerindex);
 	toPlayer = open("ServerToPlayer", O_RDONLY, 0);
@@ -49,7 +49,7 @@ int playerhandshake(int fromPlayer){
 	if(playerindex2 == playerindex + 1){
 		//printf("PLAYER RECIEVED INDEX2: %d \n", playerindex2);
 		int playerindex3 = playerindex2 + 1;
-		write(fromPlayer, &playerindex3, sizeof(int));
+		write(*fromPlayer, &playerindex3, sizeof(int));
 		//printf("PLAYER SENT INDEX3: %d \n", playerindex3);
 
 	}
