@@ -25,3 +25,4 @@ struct sembuf {
 char* getrandomitem();
 int random_index();
 int playerhandshake();
+static void ignore_SIGPIPE(int signum);

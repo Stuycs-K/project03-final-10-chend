@@ -23,3 +23,4 @@ struct sembuf {
 int mainserversetup();
 int serverconnect();
 int serverhandshake();
+static void ignore_SIGPIPE(int signum);
