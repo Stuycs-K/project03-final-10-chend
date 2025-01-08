@@ -1,9 +1,16 @@
-#include server.h
+#include "server.h"
 
 
 
 int main(){
+	while(1){
+		int 
 
+
+
+
+
+	}
 
 }
 
@@ -32,10 +39,11 @@ int serverconnect(int fromPlayer){
 	int toPlayer;
 	toPlayer = open("ServerToPlayer", O_WRONLY, 0);
 	int playerindex2 = playerindex + 1;
-	write(toPlayer, playerindex2, sizeof(int));
+	write(toPlayer, &playerindex2, sizeof(int));
 	
 	
 
 }
+
 
 

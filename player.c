@@ -1,4 +1,4 @@
-#include player.h
+#include "player.h"
 
 
 
@@ -16,8 +16,14 @@ char* getrandomitem(){
 
 int random_index(){
 	int randomIndex;
-	int randFile = read("dev/random/", O_RDONLY, 0);
-	
+	int randFile = open("dev/random/", O_RDONLY, 0);
+	read(randFile, &randomIndex, sizeof(int));
+	if(randomIndex < 0){
+		randomIndex *= -1;
+
+	}
+	randomIndex %= 1001;
+	return randomIndex;
 	//always positive, between 0 and 1000
 
 }
@@ -25,8 +31,8 @@ int random_index(){
 
 int playerhandshake(int fromPlayer){
 	int toPlayer;
-	mkfifo("ServerToPlayer", 0666)
-	fromPlayer = open("PlayerToServer" O_WRONLY, 0);
+	mkfifo("ServerToPlayer", 0666);
+	fromPlayer = open("PlayerToServer", O_WRONLY, 0);
 	int playerindex = random_index();
 	//send the server playerindex for sorting
 	write(fromPlayer, &playerindex, sizeof(int));
@@ -39,7 +45,7 @@ int playerhandshake(int fromPlayer){
 	read(toPlayer, &playerindex2, sizeof(int));
 	if(playerindex2 == playerindex + 1){
 		printf("PLAYER RECIEVED INDEX2: %d \n", playerindex2);
-		playerindex3 = playerindex2 + 1;
+		int playerindex3 = playerindex2 + 1;
 		write(fromPlayer, &playerindex3, sizeof(int));
 		printf("PLAYER SENT INDEX3: %d \n", playerindex3);
 
