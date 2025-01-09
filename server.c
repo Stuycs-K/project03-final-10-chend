@@ -29,13 +29,14 @@ int main(){
 	
 
 
-	int** listofconnections2 = malloc(sizeof(int) * 12);
+	struct connection** listofconnections2 = malloc(sizeof(int) * 24);
 	for(int i = 0; i < 6; i ++){
-			//array for file desc of 2 players
-			int* connection = malloc(sizeof(int) * 2);
-			connection[0] = -1;
-			connection[1] = -1;
-			listofconnections2[i] = connection;
+			struct connection* con;
+			con -> toPlayer1 = -1;
+			con -> fromPlayer1 = -1;
+			con -> toPlayer2 = -1;
+			con -> fromPlayer2 = -1;
+			listofconnections2[i] = con;
 	}
 	while(1){
 		if(curplayers < numplayers){
@@ -46,14 +47,16 @@ int main(){
 			FD_SET(fromPlayer, &listofconnections);
 			for(int i = 0; i < 6; i ++){
 
-				if(listofconnections2[i][0] == -1){
-					listofconnections2[i][0] = fromPlayer;
+				struct connection* con = listofconnections2[i];
+				if(con -> fromPlayer1 == -1){
+					
 					break;
 				}
-				else if(listofconnections2[i][1] == -1){
-					listofconnections2[i][1] = fromPlayer;
+				else if(con -> fromPlayer2 == -1){
 					break;
+
 				}
+
 			}
 			curplayers ++;
 			

@@ -20,6 +20,17 @@ struct sembuf {
   short sem_num;
   short sem_flag;
 };
+
+struct connection {
+  int toPlayer1;
+  int fromPlayer1;
+  int toPlayer2;
+  int fromPlayer2;
+
+
+}
+
+
 int mainserversetup();
 int serverconnect(int* fromPlayer);
 
