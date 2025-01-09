@@ -10,11 +10,7 @@ int main(){
 
 }
 
-char* getrandomitem(){
 
-
-
-}
 
 int random_index(){
 	int randomIndex;

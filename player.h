@@ -22,7 +22,7 @@ struct sembuf {
 };
 
 
-char* getrandomitem();
+
 int random_index();
 int playerhandshake(int* fromPlayer);
 static void ignore_SIGPIPE(int signum);
