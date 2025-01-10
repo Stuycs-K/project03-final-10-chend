@@ -49,10 +49,13 @@ int main(){
 
 				struct connection* con = listofconnections2[i];
 				if(con -> fromPlayer1 == -1){
-					
+					con -> fromPlayer1 = fromPlayer;
+					con -> toPlayer1 = toPlayer;
 					break;
 				}
 				else if(con -> fromPlayer2 == -1){
+					con -> fromPlayer2 = fromPlayer;
+					con -> toPlayer2 = toPlayer;
 					break;
 
 				}
@@ -68,22 +71,54 @@ int main(){
 			//started game
 			//printf("Max number of players in tournament! \n");
 
+			//max file desc
+			int maxfile = -1;
+
 			//zero out 
 			FD_ZERO(&listofconnections);
 			//select file desc again
 			for(int i = 0; i < 6; i ++){
-				if(listofconnections2[i][0] != -1){
-					FD_SET(listofconnections2[i][0], &listofconnections);
+				struct connection* con = listofconnections2[i];
+				if(con -> fromPlayer1 != -1){
+					FD_SET(con -> fromPlayer1, &listofconnections);
+					if(con -> fromPlayer1 > maxfile){
+						maxfile = con-> fromPlayer1;
+
+					}
+				}
+				if(con -> fromPlayer2 != -1){
+					FD_SET(con -> fromPlayer2, &listofconnections);
+					if(con -> fromPlayer2 > maxfile){
+						maxfile = con-> fromPlayer2;
+
+					}
+				}	
+				
+
+			}
+			select(maxfile + 1, &listofconnections, NULL, NULL, NULL);
+			//once select returns, check each potential desc with FD_ISSET
+			
+			for(int i = 0; i < 6; i ++){
+				struct connection* con = listofconnections2[i];
+				if(FD_ISSET(con -> fromPlayer1, &listofconnections)){
+					//SEND TO OTHER PLAYER
+					//READ THE MSG
+					int rockpaperscissors;
+					read(con -> fromPlayer1, &rockpaperscissors, sizeof(int));
+					write(con -> toPlayer2, rockpaperscissors, sizeof(int));
+					//SECOND PLAYER WILL DECIDE WHO WINS, SENDS SERVER RESULT
 					
 				}
-				if(listofconnections2[i][1] != -1){
-					FD_SET(listofconnections2[i][1], &listofconnections);
-					
+				else if(FD_ISSET(con -> fromPlayer2, &listofconnections)){
+					int rockpaperscissors;
+					read(con -> fromPlayer2, &rockpaperscissors, sizeof(int));
+					write(con -> toPlayer1, rockpaperscissors, sizeof(int));
 				}
 
 			}
-			select( , &listofconnections, NULL, NULL, NULL);
-			//once select returns, check each potential desc with FD_ISSET
+
+
 			//if so, get the message from that desc to the player its playing against
 			//write to the opponent using 
 		}
