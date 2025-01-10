@@ -29,3 +29,7 @@ Updated DEVLOG.md - 5 min
 (still waiting on instructions on how to check multiple pipes for messages)
 
 
+### 2024-01-09 - Starting Server Management of Players
+Finished server side of select - 70 min
+Deleted unnecessary code - 5 min
+Fixed bugs with server - 10 min
