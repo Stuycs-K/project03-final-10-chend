@@ -29,9 +29,9 @@ int main(){
 	
 
 
-	struct connection** listofconnections2 = malloc(sizeof(int) * 24);
+	struct connection** listofconnections2 = malloc(sizeof(struct connection) * 6);
 	for(int i = 0; i < 6; i ++){
-			struct connection* con;
+			struct connection* con = malloc(sizeof(struct connection));
 			con -> toPlayer1 = -1;
 			con -> fromPlayer1 = -1;
 			con -> toPlayer2 = -1;
@@ -138,18 +138,74 @@ int main(){
 
 struct connection** sortconnections(struct connection** listofconnections2){
 	int n = 0;
-
+	struct connection** newlistofconnections2 = malloc(sizeof(struct connection) * 6);
 	int* listofindices = malloc(sizeof(int) * 24);
 	for(int i = 0; i < 6; i ++){
 		struct connection* con = listofconnections2[i];
-		listofindices[i] = 
+		con -> indexPlayer1 = generateindex();
+		//might need to sleep here
+		con -> indexPlayer2 = generateindex();
+		listofindices[n] = con -> indexPlayer1;
+		n += 1;
+		listofindices[n] = con -> indexPlater2;
+		n += 1;
 
 
 	}
+	insertionsort(listofindices);
 
-	return listofconnections2;
+	//switch 
+	int whichplayer = 1;
+	for(int i = 0; i < n; i ++){
+		struct connection* newcon = malloc(sizeof(struct connection));
+		for(int j = 0; j < 6; j ++){
+			struct connection* con = listofconnections2[j];
+			
+			if(con -> indexPlayer1 == listofindices[i]){
+				if(whichplayer == 1){
+					newcon -> toPlayer1 = con -> toPlayer1;
+					newcon -> fromPlayer1 = con -> fromPlayer1;
+					whichplayer = 2;
+				}
+				else{
+					newcon -> toPlayer2 = con -> toPlayer1;
+					newcon -> fromPlayer2 = con -> fromPlayer1;
+					whichplayer = 1;
+				}
+				break;
+			}
+
+			else if(con -> indexPlayer2 == listofindices[i]){
+				if(whichplayer == 1){
+					newcon -> toPlayer1 = con -> toPlayer2;
+					newcon -> fromPlayer1 = con -> fromPlayer2;
+					whichplayer = 2;
+				}
+				else{
+					newcon -> toPlayer2 = con -> toPlayer2;
+					newcon -> fromPlayer2 = con -> fromPlayer2;
+					whichplayer = 1;
+				}
+				break;
+
+			}
+		}
+		
+			
+		
+	}
+
+	return newlistofconnections2;
 
 }
+
+
+int* insertionsort(int* listofindices){
+	
+
+
+}
+
 
 int generateindex(){
 
