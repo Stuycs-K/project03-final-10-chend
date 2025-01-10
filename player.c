@@ -7,7 +7,13 @@ int main(){
 	int toPlayer;
 	int fromPlayer;
 	toPlayer = playerhandshake(&fromPlayer);
+	while(1){
+		if()
 
+
+	
+
+	}
 }
 
 

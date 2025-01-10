@@ -6,7 +6,7 @@ int main(){
 	int choosing = 0;
 	int numplayers;
 	int curplayers = 0;
-	
+	int unsorted = 1;
 	while(choosing){
 		
 		printf("Enter 2, 4, 8, or 12(number of players in the tournament): ");
@@ -65,8 +65,13 @@ int main(){
 			
 		}
 		else{
-			
-			
+			if(unsorted){
+
+				listofconnections2 = sortconnections(listofconnections2);
+				unsorted = 0;
+			}
+			//sort listofconnections2
+
 			//send this msg to any new players
 			//started game
 			//printf("Max number of players in tournament! \n");
@@ -104,16 +109,16 @@ int main(){
 				if(FD_ISSET(con -> fromPlayer1, &listofconnections)){
 					//SEND TO OTHER PLAYER
 					//READ THE MSG
-					int rockpaperscissors;
-					read(con -> fromPlayer1, &rockpaperscissors, sizeof(int));
-					write(con -> toPlayer2, rockpaperscissors, sizeof(int));
+					char* rockpaperscissors = malloc(256);
+					read(con -> fromPlayer1, &rockpaperscissors, 255);
+					write(con -> toPlayer2, rockpaperscissors, 255);
 					//SECOND PLAYER WILL DECIDE WHO WINS, SENDS SERVER RESULT
 					
 				}
 				else if(FD_ISSET(con -> fromPlayer2, &listofconnections)){
-					int rockpaperscissors;
-					read(con -> fromPlayer2, &rockpaperscissors, sizeof(int));
-					write(con -> toPlayer1, rockpaperscissors, sizeof(int));
+					char* rockpaperscissors = malloc(256);
+					read(con -> fromPlayer2, &rockpaperscissors, 255);
+					write(con -> toPlayer1, rockpaperscissors, 255);
 				}
 
 			}
@@ -131,8 +136,36 @@ int main(){
 }
 
 
+struct connection** sortconnections(struct connection** listofconnections2){
+	int n = 0;
+
+	int* listofindices = malloc(sizeof(int) * 24);
+	for(int i = 0; i < 6; i ++){
+		struct connection* con = listofconnections2[i];
+		listofindices[i] = 
 
 
+	}
+
+	return listofconnections2;
+
+}
+
+int generateindex(){
+
+	int randomIndex;
+	int randFile = open("/dev/random", O_RDONLY, 0);
+	read(randFile, &randomIndex, sizeof(int));
+	if(randomIndex < 0){
+		randomIndex *= -1;
+
+	}
+	printf("Generated Player Index: %d \n", randomIndex);
+	randomIndex %= 1001;
+	return randomIndex;
+	//always positive, between 0 and 1000
+
+}
 
 int mainserversetup(){
 	int fromPlayer;

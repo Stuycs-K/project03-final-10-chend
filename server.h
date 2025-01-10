@@ -24,9 +24,12 @@ struct sembuf {
 struct connection {
   int toPlayer1;
   int fromPlayer1;
+  int indexPlayer1;
   int toPlayer2;
   int fromPlayer2;
-
+  int indexPlayer2;
+  int toWinner;
+  int fromWinner;
 
 }
 
