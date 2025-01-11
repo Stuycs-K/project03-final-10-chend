@@ -33,3 +33,15 @@ Updated DEVLOG.md - 5 min
 Finished server side of select - 70 min
 Deleted unnecessary code - 5 min
 Fixed bugs with server - 10 min
+
+
+### 2024-01-10 - Finished Most Functions For Matchmaking
+Finished insertion sort - 15 min
+Finished printing for testing - 5 min
+Finished player initialization for server management - 60 min
+Finished updating structs - 5 min
+
+
+
+
+

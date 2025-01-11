@@ -8,6 +8,7 @@ int main(){
 	int fromPlayer;
 	toPlayer = playerhandshake(&fromPlayer);
 	while(1){
+		//read until msg says "pass"
 		if()
 
 
