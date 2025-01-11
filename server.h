@@ -31,9 +31,12 @@ struct connection {
   int toWinner;
   int fromWinner;
 
-}
+};
 
 
+int generateindex();
+int* insertionsort(int* listofindices, int size);
+struct connection** sortconnections(struct connection** listofconnections2);
 int mainserversetup();
 int serverconnect(int* fromPlayer);
 

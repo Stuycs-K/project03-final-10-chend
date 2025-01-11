@@ -141,6 +141,7 @@ struct connection** sortconnections(struct connection** listofconnections2){
 	struct connection** newlistofconnections2 = malloc(sizeof(struct connection) * 6);
 	int* listofindices = malloc(sizeof(int) * 24);
 	for(int i = 0; i < 6; i ++){
+		//check if not empty
 		struct connection* con = listofconnections2[i];
 		con -> indexPlayer1 = generateindex();
 		//might need to sleep here
@@ -152,45 +153,37 @@ struct connection** sortconnections(struct connection** listofconnections2){
 
 
 	}
-	insertionsort(listofindices);
+	listofindices = insertionsort(listofindices, n);
 
-	//switch 
-	int whichplayer = 1;
-	for(int i = 0; i < n; i ++){
+	int qq = 0;
+	for(int i = 0; i < n; i += 2){
 		struct connection* newcon = malloc(sizeof(struct connection));
+		newcon -> toPlayer1 = -1;
 		for(int j = 0; j < 6; j ++){
 			struct connection* con = listofconnections2[j];
 			
-			if(con -> indexPlayer1 == listofindices[i]){
-				if(whichplayer == 1){
-					newcon -> toPlayer1 = con -> toPlayer1;
-					newcon -> fromPlayer1 = con -> fromPlayer1;
-					whichplayer = 2;
-				}
-				else{
-					newcon -> toPlayer2 = con -> toPlayer1;
-					newcon -> fromPlayer2 = con -> fromPlayer1;
-					whichplayer = 1;
-				}
-				break;
+			if(con -> indexPlayer1 == listofindices[i] && newcon -> toPlayer1 == -1){
+				
+				newcon -> toPlayer1 = con -> toPlayer1;
+				newcon -> fromPlayer1 = con -> fromPlayer1;
+			
+				
+				
+				
 			}
 
-			else if(con -> indexPlayer2 == listofindices[i]){
-				if(whichplayer == 1){
-					newcon -> toPlayer1 = con -> toPlayer2;
-					newcon -> fromPlayer1 = con -> fromPlayer2;
-					whichplayer = 2;
-				}
-				else{
-					newcon -> toPlayer2 = con -> toPlayer2;
-					newcon -> fromPlayer2 = con -> fromPlayer2;
-					whichplayer = 1;
-				}
+			if(con -> indexPlayer2 == listofindices[i + 1]){
+				
+				
+				newcon -> toPlayer2 = con -> toPlayer2;
+				newcon -> fromPlayer2 = con -> fromPlayer2;
+				
 				break;
 
 			}
 		}
-		
+		newlistofconnections2[qq] = newcon;
+		qq += 1;
 			
 		
 	}
@@ -200,10 +193,25 @@ struct connection** sortconnections(struct connection** listofconnections2){
 }
 
 
-int* insertionsort(int* listofindices){
+int* insertionsort(int* listofindices, int size){
 	
+	for(int i = 1; i < size; i ++){
+		
+		for(int j = i; j <= 1; j --){
+			if(listofindices[j] <= listofindices[j - 1]){
+				int tempval2 = listofindices[j - 1];
+				int tempval = listofindices[j];
+				listofindices[j] = tempval2;
+				listofindices[j - 1] = tempval;
 
+			}
 
+		}
+		
+
+	}
+	return listofindices;
+	
 }
 
 
