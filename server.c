@@ -3,24 +3,12 @@
 
 
 int main(){
-	int choosing = 0;
-	int numplayers;
+	
+	//numplayers is the max
+	int numplayers = 12;
 	int curplayers = 0;
 	int unsorted = 1;
-	while(choosing){
-		
-		printf("Enter 2, 4, 8, or 12(number of players in the tournament): ");
-		fgets(numplayers, sizeof(int), stdin);
-		if(numplayers == 2 || numplayers == 4 || numplayers == 8 || numplayers == 12){
-			
-			printf("Waiting for %d players...\n", numplayers);
-			choosing = 1;
-		}
-		else{
-			printf("Please enter a valid number of players!");
 
-		}
-	}
 	signal(SIGPIPE, ignore_SIGPIPE);
 	fd_set listofconnections;
 	FD_ZERO(&listofconnections);
@@ -42,6 +30,7 @@ int main(){
 		if(curplayers < numplayers){
 			int toPlayer;
 			int fromPlayer;
+			printf("Waiting for %d players... \n", numplayers - curplayers);
 			fromPlayer = mainserversetup();
 			toPlayer = serverconnect(&fromPlayer);
 			FD_SET(fromPlayer, &listofconnections);
@@ -80,13 +69,18 @@ int main(){
 			//max file desc
 			int maxfile = -1;
 
-			//zero out 
-			FD_ZERO(&listofconnections);
+			
 			//select file desc again
 			for(int i = 0; i < 6; i ++){
 				struct connection* con = listofconnections2[i];
 				if(con -> fromPlayer1 != -1){
 					FD_SET(con -> fromPlayer1, &listofconnections);
+					//send msg to all player1s to init
+					struct message* proceed = malloc(sizeof(struct message));
+					strcpy(proceed -> servermsg, "go1");
+					write(con -> toPlayer1, proceed, sizeof(struct message));
+					
+				
 					if(con -> fromPlayer1 > maxfile){
 						maxfile = con-> fromPlayer1;
 
@@ -102,28 +96,69 @@ int main(){
 				
 
 			}
+
+			
+			
+			
 			select(maxfile + 1, &listofconnections, NULL, NULL, NULL);
 			//once select returns, check each potential desc with FD_ISSET
-			
+			printf("RAN \n");
 			for(int i = 0; i < 6; i ++){
 				struct connection* con = listofconnections2[i];
+				struct message* msg = malloc(sizeof(struct message));
+				
 				if(FD_ISSET(con -> fromPlayer1, &listofconnections)){
+					
 					//SEND TO OTHER PLAYER
 					//READ THE MSG
-					char* rockpaperscissors = malloc(256);
-					read(con -> fromPlayer1, &rockpaperscissors, 255);
-					write(con -> toPlayer2, rockpaperscissors, 255);
-					//SECOND PLAYER WILL DECIDE WHO WINS, SENDS SERVER RESULT
+					struct message* newmsg = malloc(sizeof(struct message));
+					read(con -> fromPlayer1, msg, sizeof(struct message));
+					printf("PLAYER1 VAL: %d \n", msg -> value);
+
+
+
+					if(strcmp(msg -> servermsg, "go2") == 0){
+						strcpy(newmsg -> servermsg, "go2");
+						newmsg -> value = msg -> value;
+						write(con -> toPlayer2, newmsg, sizeof(struct message));
+						
+						
+					}
 					
+					//SECOND PLAYER WILL DECIDE WHO WINS, SENDS SERVER RESULT
+					//else for exit
 				}
 				else if(FD_ISSET(con -> fromPlayer2, &listofconnections)){
-					char* rockpaperscissors = malloc(256);
-					read(con -> fromPlayer2, &rockpaperscissors, 255);
-					write(con -> toPlayer1, rockpaperscissors, 255);
+					read(con -> fromPlayer2, msg, sizeof(struct message));
+					struct message* newmsg = malloc(sizeof(struct message));
+
+					if(strcmp(msg -> servermsg, "won") == 0){
+
+						//win
+						//tell player1 to exit(SIGINT)
+						//send "pass" to player2
+						
+					}
+					else if(strcmp(msg -> servermsg, "lose") == 0){
+
+						//lose
+						//tell player2 to exit(SIGINT)
+						//send "pass" to player1
+					}
+					else{
+
+						//draw
+					}
+					
+
+
+
+
 				}
 
 			}
-
+			//zero out 
+			FD_ZERO(&listofconnections);
 
 			//if so, get the message from that desc to the player its playing against
 			//write to the opponent using 
@@ -138,12 +173,13 @@ int main(){
 
 
 
+
 void printconnections(struct connection** listofconnections2){
 	for(int i = 0; i < 6; i ++){
 		
 		struct connection* con = listofconnections2[i];
 		printf("PLAYER1INDEX: %d \n", con -> indexPlayer1);
-		printf("FROMPLAYER1: %d \n"); con -> fromPlayer1);
+		printf("FROMPLAYER1: %d \n", con -> fromPlayer1);
 		printf("PLAYER2INDEX: %d \n", con -> indexPlayer2);
 		printf("FROMPLAYER2: %d \n", con -> fromPlayer2);
 
@@ -151,6 +187,7 @@ void printconnections(struct connection** listofconnections2){
 
 
 }
+
 struct connection** sortconnections(struct connection** listofconnections2){
 	int n = 0;
 	struct connection** newlistofconnections2 = malloc(sizeof(struct connection) * 6);
@@ -159,10 +196,10 @@ struct connection** sortconnections(struct connection** listofconnections2){
 		//check if not empty
 		struct connection* con = listofconnections2[i];
 		con -> indexPlayer1 = generateindex();
-		printf("GENERATEDINDEX1: %d \n", con -> indexPlayer1);
+		
 		//might need to sleep here
 		con -> indexPlayer2 = generateindex();
-		printf("GENERATEDINDEX2: %d \n", con -> indexPlayer2);	
+		
 		listofindices[n] = con -> indexPlayer1;
 		n += 1;
 		listofindices[n] = con -> indexPlayer2;
@@ -181,8 +218,7 @@ struct connection** sortconnections(struct connection** listofconnections2){
 			
 			
 			struct connection* con = listofconnections2[j];
-			printf("CON INDEX1: %d , CON INDEX2: %d \n", con ->indexPlayer1, con ->indexPlayer2);
-			printf("CHECKING FOR1: %d, CHECKING FOR2: %d \n", listofindices[i], listofindices[i + 1]);
+			
 			if(con -> indexPlayer1 == listofindices[i] || con -> indexPlayer1 == listofindices[i + 1]){
 				if(newcon -> toPlayer1 == -1){
 					newcon -> toPlayer1 = con -> toPlayer1;
@@ -219,8 +255,7 @@ struct connection** sortconnections(struct connection** listofconnections2){
 			
 		}
 		newlistofconnections2[qq] = newcon;
-		printf("NEWCON INDEX1: %d \n", newcon ->indexPlayer1);
-		printf("NEWCON INDEX2: %d \n", newcon ->indexPlayer2);
+		
 		qq += 1;
 			
 		

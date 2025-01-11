@@ -33,6 +33,19 @@ struct connection {
 
 };
 
+struct message {
+  int value; //for rock paper scissors
+  char servermsg[256]; //pass means wait for players
+		   //go means ask for user input
+		   //win means player won, wait for next 
+		   //lose means player lost, SIGINT
+
+};
+
+
+
+
+
 void printconnections(struct connection** listofconnections2);
 int generateindex();
 int* insertionsort(int* listofindices, int size);

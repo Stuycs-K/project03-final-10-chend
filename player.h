@@ -22,6 +22,14 @@ struct sembuf {
 };
 
 
+struct message {
+  int value; //for rock paper scissors
+  char servermsg[256]; //pass means wait for players
+		   //go means ask for user input/player sent msg to server(go1/go2)
+		   //win means player won, wait for next 
+		   //lose means player lost, SIGINT
+		   //disconnect means player disconnected
+};
 
 int random_index();
 int playerhandshake(int* fromPlayer);
