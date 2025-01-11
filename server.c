@@ -197,7 +197,8 @@ int* insertionsort(int* listofindices, int size){
 	
 	for(int i = 1; i < size; i ++){
 		
-		for(int j = i; j <= 1; j --){
+		for(int j = i; j >= 1; j --){
+			printf("J: %d \n" , j);
 			if(listofindices[j] <= listofindices[j - 1]){
 				int tempval2 = listofindices[j - 1];
 				int tempval = listofindices[j];
