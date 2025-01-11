@@ -33,7 +33,7 @@ struct connection {
 
 };
 
-
+void printconnections(struct connection** listofconnections2);
 int generateindex();
 int* insertionsort(int* listofindices, int size);
 struct connection** sortconnections(struct connection** listofconnections2);
