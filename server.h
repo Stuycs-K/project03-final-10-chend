@@ -32,6 +32,9 @@ struct connection {
   int fromWinner;
 
 };
+static int returnplayer1choice(int player1choice);
+
+
 
 struct message {
   int value; //for rock paper scissors

@@ -42,6 +42,10 @@ Finished player initialization for server management - 60 min
 Finished updating structs - 5 min
 
 
+### 2024-01-11 - Almost Finished With Basic Game
+Almost finished with server-side part of game(no draws yet) - 120 min
+Almost finished with player-side part of game(no draws yet) - 30 min
+Updated structs and functions - 10 min
 
 
 

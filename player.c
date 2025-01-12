@@ -7,14 +7,15 @@ int main(){
 	int toPlayer;
 	int fromPlayer;
 	toPlayer = playerhandshake(&fromPlayer);
-
+	signal(SIGINT, quit);
+	int waiting = 0;
 	while(1){
 		//read until msg says "pass"
 		struct message* msg = malloc(sizeof(struct message));
 		read(toPlayer, msg, sizeof(struct message));
-		if(strcmp(msg -> servermsg, "pass") == 0){
+		if(strcmp(msg -> servermsg, "pass") == 0 || waiting){
 			
-			printf("Waiting for players... \n");
+			printf("Waiting for opponent... \n");
 		}
 		if(strcmp(msg -> servermsg, "go2") == 0){
 			//THIS PLAYER IS SECOND, CALCULATES WHO WON AND SENDS SERVER WINNER
@@ -32,12 +33,15 @@ int main(){
 			//WHO WON HERE
 			if((choice == 1 && msg -> value == 3) || (choice == 2 && msg -> value == 1) || (choice == 3 && msg -> value == 2)){
 				//win
+				
 				strcpy(newmsg -> servermsg, "won");
 					
 			}
 
 			else if((choice == 3 && msg -> value == 1) || (choice == 1 && msg -> value == 2) || (choice == 2 && msg -> value == 3)){
 				//lose
+				
+
 				strcpy(newmsg -> servermsg, "lose");
 			}
 			else{
@@ -51,7 +55,7 @@ int main(){
 			newmsg -> value = choice;
 			
 			write(fromPlayer, newmsg, sizeof(struct message));
-
+			waiting = 0;
 		}
 		else if(strcmp(msg -> servermsg, "go1") == 0){
 			struct message* newmsg = malloc(sizeof(struct message));
@@ -68,14 +72,79 @@ int main(){
 			newmsg -> value = choice;
 			strcpy(newmsg -> servermsg, "go2");
 			write(fromPlayer, newmsg, sizeof(struct message));
+			waiting = 0;
 
 		}
+		else if(strcmp(msg -> servermsg, "wonall") == 0){
+			int choice = msg -> value;
+			char* strchoice = malloc(256);
+			if(choice == 1){
 
+			}
+			else if(choice == 2){
+
+
+			}
+			else{
+
+
+			}
+			printf("Player Won! \n");
+			printf("Opponent chose %s \n", );
+			quit(1);
+		}
+		else if(strcmp(msg -> servermsg, "won") == 0){
+			int choice = msg -> value;
+			char* strchoice = malloc(256);
+			if(choice == 1){
+
+			}
+			else if(choice == 2){
+
+
+			}
+			else{
+
+
+			}
+			printf("Player Won! \n");
+			printf("Opponent chose %s \n", );
+			waiting = 1;
+
+		}
+		else if(strcmp(msg -> servermsg, "lose") == 0){
+			int choice = msg -> value;
+			char* strchoice = malloc(256);
+			if(choice == 1){
+
+			}
+			else if(choice == 2){
+
+
+			}
+			else{
+
+
+			}
+			printf("Player Lost! \n");
+			printf("Opponent chose %s \n", );
+			quit(1);
+
+		}
 	
 
 	}
 }
 
+
+static void quit(int signum){
+
+
+
+	printf("Player Exiting... \n");
+	exit(0);
+
+}
 
 
 int random_index(){

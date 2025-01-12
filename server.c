@@ -96,7 +96,8 @@ int main(){
 				
 
 			}
-
+			printconnections(listofconnections2);
+			printf("MAXFILE: %d \n", maxfile);
 			
 			
 			
@@ -112,9 +113,13 @@ int main(){
 					//SEND TO OTHER PLAYER
 					//READ THE MSG
 					struct message* newmsg = malloc(sizeof(struct message));
-					read(con -> fromPlayer1, msg, sizeof(struct message));
-					printf("PLAYER1 VAL: %d \n", msg -> value);
 
+					//msg to other player
+					struct message* newmsg2 = malloc(sizeof(struct message));
+
+					read(con -> fromPlayer1, msg, sizeof(struct message));
+					printf("PLAYER1 PICKED: %d \n", msg -> value);
+					returnplayer1choice(msg -> value);
 
 
 					if(strcmp(msg -> servermsg, "go2") == 0){
@@ -122,6 +127,9 @@ int main(){
 						newmsg -> value = msg -> value;
 						write(con -> toPlayer2, newmsg, sizeof(struct message));
 						
+						strcpy(newmsg2 -> servermsg, "pass");
+						 
+						write(con -> toPlayer1, newmsg2, sizeof(struct message));
 						
 					}
 					
@@ -131,25 +139,49 @@ int main(){
 				else if(FD_ISSET(con -> fromPlayer2, &listofconnections)){
 					read(con -> fromPlayer2, msg, sizeof(struct message));
 					struct message* newmsg = malloc(sizeof(struct message));
-
+					//msg to other player
+					struct message* newmsg2 = malloc(sizeof(struct message));
 					if(strcmp(msg -> servermsg, "won") == 0){
-
+						
 						//win
 						//tell player1 to exit(SIGINT)
-						//send "pass" to player2
-						
+						//send "lose" to player1 & the choice opponent made(send choice from player2 to player1, player2 already knows since they decided who won)
+						//send "won" to player2
+						int opponentchoice = returnplayer1choice(-1);
+
+						strcpy(newmsg -> servermsg, "won");
+						newmsg -> value = opponentchoice;
+
+						strcpy(newmsg2 -> servermsg, "lose");
+						newmsg2 -> value = msg -> value;
+
+						write(con -> toPlayer1, newmsg2, sizeof(struct message));
+						write(con -> toPlayer2,	newmsg, sizeof(struct message));
+
 					}
 					else if(strcmp(msg -> servermsg, "lose") == 0){
 
 						//lose
 						//tell player2 to exit(SIGINT)
-						//send "pass" to player1
+						//send "won" to player1 & the choice oppoennt made
+						//send "lose to player2
+						int opponentchoice = returnplayer1choice(-1);
+
+						strcpy(newmsg -> servermsg, "won");
+						newmsg -> value = msg -> value;
+
+						strcpy(newmsg2 -> servermsg, "lose");
+						newmsg2 -> value = opponentchoice;
+
+						write(con -> toPlayer1, newmsg, sizeof(struct message));
+						write(con -> toPlayer2, newmsg2, sizeof(struct message));
 					}
-					else{
+					else if(strcmp(msg -> servermsg, "draw") == 0){
 
 						//draw
 					}
 					
+					//wonall if player wins final match
 
 
 
@@ -171,6 +203,20 @@ int main(){
 
 }
 
+
+
+static int returnplayer1choice(int player1choice){
+	//int player1choice is either 1, 2, or 3(set value)
+	
+	static int Player1Choice = -1;
+	if(player1choice != -1){
+	Player1Choice = player1choice;
+	}
+	
+	return Player1Choice;
+	
+
+}
 
 
 
