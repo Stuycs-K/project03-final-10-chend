@@ -11,7 +11,7 @@ int main(){
 
 	signal(SIGPIPE, ignore_SIGPIPE);
 	fd_set listofconnections;
-	FD_ZERO(&listofconnections);
+	
 	
 
 	
@@ -33,7 +33,7 @@ int main(){
 			printf("Waiting for %d players... \n", numplayers - curplayers);
 			fromPlayer = mainserversetup();
 			toPlayer = serverconnect(&fromPlayer);
-			FD_SET(fromPlayer, &listofconnections);
+			
 			for(int i = 0; i < 6; i ++){
 
 				struct connection* con = listofconnections2[i];
@@ -58,6 +58,13 @@ int main(){
 			if(unsorted){
 
 				listofconnections2 = sortconnections(listofconnections2);
+				for(int i = 0; i < 6; i ++){
+					struct connection* con = listofconnections2[i];
+					struct message* proceed = malloc(sizeof(struct message));
+					strcpy(proceed -> servermsg, "go1");
+					write(con -> toPlayer1, proceed, sizeof(struct message));
+				}
+				
 				unsorted = 0;
 			}
 			//sort listofconnections2
@@ -68,42 +75,44 @@ int main(){
 
 			//max file desc
 			int maxfile = -1;
-
+			FD_ZERO(&listofconnections);
 			
 			//select file desc again
 			for(int i = 0; i < 6; i ++){
 				struct connection* con = listofconnections2[i];
 				if(con -> fromPlayer1 != -1){
-					FD_SET(con -> fromPlayer1, &listofconnections);
-					//send msg to all player1s to init
-					struct message* proceed = malloc(sizeof(struct message));
-					strcpy(proceed -> servermsg, "go1");
-					write(con -> toPlayer1, proceed, sizeof(struct message));
 					
-				
+					//send msg to all player1s to init
+					
 					if(con -> fromPlayer1 > maxfile){
 						maxfile = con-> fromPlayer1;
 
 					}
+					
+					FD_SET(con -> fromPlayer1, &listofconnections);
 				}
 				if(con -> fromPlayer2 != -1){
-					FD_SET(con -> fromPlayer2, &listofconnections);
+					
 					if(con -> fromPlayer2 > maxfile){
 						maxfile = con-> fromPlayer2;
 
 					}
+					FD_SET(con -> fromPlayer2, &listofconnections);
 				}	
 				
 
 			}
-			printconnections(listofconnections2);
+			maxfile += 1;
 			printf("MAXFILE: %d \n", maxfile);
+			printconnections(listofconnections2);
 			
 			
-			
-			select(maxfile + 1, &listofconnections, NULL, NULL, NULL);
+			if(select(maxfile, &listofconnections, NULL, NULL, NULL) < 0){
+				printf("SELECT ERROR! \n");
+
+			}
 			//once select returns, check each potential desc with FD_ISSET
-			printf("RAN \n");
+			
 			for(int i = 0; i < 6; i ++){
 				struct connection* con = listofconnections2[i];
 				struct message* msg = malloc(sizeof(struct message));

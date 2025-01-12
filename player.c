@@ -13,6 +13,10 @@ int main(){
 		//read until msg says "pass"
 		struct message* msg = malloc(sizeof(struct message));
 		read(toPlayer, msg, sizeof(struct message));
+		printf("SERVER SENT MSG: %s \n", msg -> servermsg);
+
+
+
 		if(strcmp(msg -> servermsg, "pass") == 0 || waiting){
 			
 			printf("Waiting for opponent... \n");
@@ -79,36 +83,36 @@ int main(){
 			int choice = msg -> value;
 			char* strchoice = malloc(256);
 			if(choice == 1){
-
+				strcpy(strchoice, "rock");
 			}
 			else if(choice == 2){
 
-
+ 				strcpy(strchoice, "paper");
 			}
 			else{
 
-
+				strcpy(strchoice, "scissors");
 			}
-			printf("Player Won! \n");
-			printf("Opponent chose %s \n", );
+			printf("Player Won The Tournament! \n");
+			printf("Opponent chose %s \n", strchoice);
 			quit(1);
 		}
 		else if(strcmp(msg -> servermsg, "won") == 0){
 			int choice = msg -> value;
 			char* strchoice = malloc(256);
 			if(choice == 1){
-
+				strcpy(strchoice, "rock");
 			}
 			else if(choice == 2){
 
-
+ 				strcpy(strchoice, "paper");
 			}
 			else{
 
-
+				strcpy(strchoice, "scissors");
 			}
 			printf("Player Won! \n");
-			printf("Opponent chose %s \n", );
+			printf("Opponent chose %s \n", strchoice);
 			waiting = 1;
 
 		}
@@ -116,18 +120,18 @@ int main(){
 			int choice = msg -> value;
 			char* strchoice = malloc(256);
 			if(choice == 1){
-
+				strcpy(strchoice, "rock");
 			}
 			else if(choice == 2){
 
-
+ 				strcpy(strchoice, "paper");
 			}
 			else{
 
-
+				strcpy(strchoice, "scissors");
 			}
 			printf("Player Lost! \n");
-			printf("Opponent chose %s \n", );
+			printf("Opponent chose %s \n", strchoice);
 			quit(1);
 
 		}
@@ -184,6 +188,7 @@ int playerhandshake(int* fromPlayer){
 		//printf("PLAYER SENT INDEX3: %d \n", playerindex3);
 
 	}
+	printf("PLAYERTOSERVER: %d \n", toPlayer);
 	//read SYN_ACK
 	//send ACK(playerindex + 2)
 	return toPlayer;
