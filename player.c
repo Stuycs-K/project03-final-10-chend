@@ -16,7 +16,16 @@ int main(){
 		printf("SERVER SENT MSG: %s \n", msg -> servermsg);
 
 
+		if(strcmp(msg -> servermsg, "recieveindex") == 0){
+			//for player2
+			//player1 got go
+			int myindex = msg -> setindex;
+			int opponentindex = msg -> setindexopponent;
+			printf("Your index is %d \n", myindex);
+			printf("You are playing against index %d \n", opponentindex);
 
+
+		}
 		if(strcmp(msg -> servermsg, "pass") == 0 || waiting){
 			
 			printf("Waiting for opponent... \n");
@@ -62,6 +71,18 @@ int main(){
 			waiting = 0;
 		}
 		else if(strcmp(msg -> servermsg, "go1") == 0){
+
+			if(msg -> setindex >= 0 && msg -> setindexopponent >= 0){
+				int myindex = msg -> setindex;
+				int opponentindex = msg -> setindexopponent;
+				printf("Your index is %d \n", myindex);
+				printf("You are playing against index %d \n", opponentindex);
+				
+
+			}
+
+
+
 			struct message* newmsg = malloc(sizeof(struct message));
 			int choice = -1;
 			while(choice != 1 && choice != 2 && choice != 3){

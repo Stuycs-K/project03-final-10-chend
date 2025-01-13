@@ -23,6 +23,8 @@ struct sembuf {
 
 static void quit(int signum);
 struct message {
+  int setindex; //index for player
+  int setindexopponent; //index for opponent
   int value; //for rock paper scissors
   char servermsg[256]; //pass means wait for players
 		   //go means ask for user input/player sent msg to server(go1/go2)

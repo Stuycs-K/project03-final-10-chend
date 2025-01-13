@@ -5,7 +5,7 @@
 int main(){
 	
 	//numplayers is the max
-	int numplayers = 12;
+	int numplayers = 8;
 	int curplayers = 0;
 	int unsorted = 1;
 
@@ -17,8 +17,8 @@ int main(){
 	
 
 
-	struct connection** listofconnections2 = malloc(sizeof(struct connection) * 6);
-	for(int i = 0; i < 6; i ++){
+	struct connection** listofconnections2 = malloc(sizeof(struct connection) * 4);
+	for(int i = 0; i < 4; i ++){
 			struct connection* con = malloc(sizeof(struct connection));
 			con -> toPlayer1 = -1;
 			con -> fromPlayer1 = -1;
@@ -34,7 +34,7 @@ int main(){
 			fromPlayer = mainserversetup();
 			toPlayer = serverconnect(&fromPlayer);
 			
-			for(int i = 0; i < 6; i ++){
+			for(int i = 0; i < 4; i ++){
 
 				struct connection* con = listofconnections2[i];
 				if(con -> fromPlayer1 == -1){
@@ -58,11 +58,36 @@ int main(){
 			if(unsorted){
 
 				listofconnections2 = sortconnections(listofconnections2);
-				for(int i = 0; i < 6; i ++){
+				for(int i = 0; i < 4; i ++){
 					struct connection* con = listofconnections2[i];
+
 					struct message* proceed = malloc(sizeof(struct message));
 					strcpy(proceed -> servermsg, "go1");
+					proceed -> setindex = con -> indexPlayer1;
+					proceed -> setindexopponent = con -> indexPlayer2;
+					
+					
+					
 					write(con -> toPlayer1, proceed, sizeof(struct message));
+					
+					struct message* proceed2 = malloc(sizeof(struct message));
+					strcpy(proceed2 -> servermsg, "recieveindex");
+					proceed2 -> setindex = con -> indexPlayer2;
+					proceed2 -> setindexopponent = con -> indexPlayer1;
+
+
+					write(con -> toPlayer2, proceed2, sizeof(struct message));
+					sleep(1);
+					//TO SEND ANOTHER MESSAGE
+
+						
+
+					struct message* proceed3 = malloc(sizeof(struct message));
+					strcpy(proceed3 -> servermsg, "pass");
+
+
+					write(con -> toPlayer2, proceed3, sizeof(struct message));
+					
 				}
 				
 				unsorted = 0;
@@ -78,7 +103,7 @@ int main(){
 			FD_ZERO(&listofconnections);
 			
 			//select file desc again
-			for(int i = 0; i < 6; i ++){
+			for(int i = 0; i < 4; i ++){
 				struct connection* con = listofconnections2[i];
 				if(con -> fromPlayer1 != -1){
 					
@@ -113,7 +138,7 @@ int main(){
 			}
 			//once select returns, check each potential desc with FD_ISSET
 			
-			for(int i = 0; i < 6; i ++){
+			for(int i = 0; i < 4; i ++){
 				struct connection* con = listofconnections2[i];
 				struct message* msg = malloc(sizeof(struct message));
 				
@@ -188,6 +213,16 @@ int main(){
 					else if(strcmp(msg -> servermsg, "draw") == 0){
 
 						//draw
+						int opponentchoice = returnplayer1choice(-1);
+
+						strcpy(newmsg -> servermsg, "draw");
+						newmsg -> value = msg -> value;
+
+						strcpy(newmsg2 -> servermsg, "draw");
+						newmsg2 -> value = opponentchoice;
+						
+
+						
 					}
 					
 					//wonall if player wins final match
@@ -230,7 +265,7 @@ static int returnplayer1choice(int player1choice){
 
 
 void printconnections(struct connection** listofconnections2){
-	for(int i = 0; i < 6; i ++){
+	for(int i = 0; i < 4; i ++){
 		
 		struct connection* con = listofconnections2[i];
 		printf("PLAYER1INDEX: %d \n", con -> indexPlayer1);
@@ -245,9 +280,9 @@ void printconnections(struct connection** listofconnections2){
 
 struct connection** sortconnections(struct connection** listofconnections2){
 	int n = 0;
-	struct connection** newlistofconnections2 = malloc(sizeof(struct connection) * 6);
-	int* listofindices = malloc(sizeof(int) * 24);
-	for(int i = 0; i < 6; i ++){
+	struct connection** newlistofconnections2 = malloc(sizeof(struct connection) * 4);
+	int* listofindices = malloc(sizeof(int) * 16);
+	for(int i = 0; i < 4; i ++){
 		//check if not empty
 		struct connection* con = listofconnections2[i];
 		con -> indexPlayer1 = generateindex();
@@ -269,7 +304,7 @@ struct connection** sortconnections(struct connection** listofconnections2){
 		struct connection* newcon = malloc(sizeof(struct connection));
 		newcon -> toPlayer1 = -1;
 		newcon -> toPlayer2 = -1;
-		for(int j = 0; j < 6; j ++){
+		for(int j = 0; j < 4; j ++){
 			
 			
 			struct connection* con = listofconnections2[j];

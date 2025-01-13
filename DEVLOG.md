@@ -47,5 +47,10 @@ Almost finished with server-side part of game(no draws yet) - 120 min
 Almost finished with player-side part of game(no draws yet) - 30 min
 Updated structs and functions - 10 min
 
+### 2024-01-12 - Finished With Server Side Of Basic Game(No Draws Still)
+Finished with server-side part of game(no draws yet), now working on matchmaking(already done with sorting, but I need to add a loop to do that for the winners) - 40 min
+Finished with player-side part of game(no draws yet as well, missing same things as server) - 15 min
+Updated structs and functions for 8 players instead of 12(tournament doesn't work with 12 players) - 10 min
+Updated PROPOSAL.md - 10 min
 
 
