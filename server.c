@@ -128,8 +128,7 @@ int main(){
 
 			}
 			maxfile += 1;
-			printf("MAXFILE: %d \n", maxfile);
-			printconnections(listofconnections2);
+			
 			
 			
 			if(select(maxfile, &listofconnections, NULL, NULL, NULL) < 0){
@@ -220,7 +219,26 @@ int main(){
 
 						strcpy(newmsg2 -> servermsg, "draw");
 						newmsg2 -> value = opponentchoice;
+						write(con -> toPlayer1, newmsg, sizeof(struct message));
+						write(con -> toPlayer2, newmsg2, sizeof(struct message));
+
+
+						sleep(1);
 						
+						
+						
+						
+						struct message* newmsg3 = malloc(sizeof(struct message));
+						strcpy(newmsg3 -> servermsg, "go1");
+						newmsg3 -> value = msg -> value;
+						newmsg3 -> setindex = -1;
+						newmsg3 -> setindexopponent = -1;
+						//msg to other player
+						struct message* newmsg4 = malloc(sizeof(struct message));
+						newmsg4 -> value = opponentchoice;
+						strcpy(newmsg4 -> servermsg, "pass");
+						write(con -> toPlayer1, newmsg3, sizeof(struct message));
+						write(con -> toPlayer2, newmsg4, sizeof(struct message));
 
 						
 					}

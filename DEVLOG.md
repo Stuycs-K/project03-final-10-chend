@@ -2,7 +2,7 @@
 
 This document must be updated daily by EACH group member.
 
-## Player 1
+## David Chen
 
 ### 2024-01-02 - Picking Partners
 I chose myself - 0 min

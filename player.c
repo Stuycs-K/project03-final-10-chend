@@ -9,6 +9,7 @@ int main(){
 	toPlayer = playerhandshake(&fromPlayer);
 	signal(SIGINT, quit);
 	int waiting = 0;
+	printf("Waiting for server... \n");
 	while(1){
 		//read until msg says "pass"
 		struct message* msg = malloc(sizeof(struct message));
@@ -58,7 +59,7 @@ int main(){
 				strcpy(newmsg -> servermsg, "lose");
 			}
 			else{
-				strcpy(newmsg -> servermsg, "go1");
+				strcpy(newmsg -> servermsg, "draw");
 				//tie(send go1)
 				
 			}
@@ -156,6 +157,25 @@ int main(){
 			quit(1);
 
 		}
+		else if(strcmp(msg -> servermsg, "draw") == 0){
+			int choice = msg -> value;
+			char* strchoice = malloc(256);
+			if(choice == 1){
+				strcpy(strchoice, "rock");
+			}
+			else if(choice == 2){
+
+ 				strcpy(strchoice, "paper");
+			}
+			else{
+
+				strcpy(strchoice, "scissors");
+			}
+			printf("Draw! \n");
+			printf("Both players chose %s \n", strchoice);
+			printf("New round starting... \n");
+
+		}
 	
 
 	}
@@ -180,7 +200,7 @@ int random_index(){
 		randomIndex *= -1;
 
 	}
-	printf("Generated Player Index: %d \n", randomIndex);
+	
 	randomIndex %= 1001;
 	return randomIndex;
 	//always positive, between 0 and 1000
@@ -209,7 +229,7 @@ int playerhandshake(int* fromPlayer){
 		//printf("PLAYER SENT INDEX3: %d \n", playerindex3);
 
 	}
-	printf("PLAYERTOSERVER: %d \n", toPlayer);
+	
 	//read SYN_ACK
 	//send ACK(playerindex + 2)
 	return toPlayer;
