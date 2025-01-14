@@ -33,7 +33,8 @@ struct message {
 	           //draw, play against each other again
 		   //disconnect means player disconnected
 };
-
+static int returnfromPlayer(int fromPlayer);
+static int returnindex(int index);
 int random_index();
 int playerhandshake(int* fromPlayer);
 static void ignore_SIGPIPE(int signum);

@@ -95,16 +95,15 @@ int main(){
 
 
 			//remake and check if resort did anything
-			if(remakeconnections(listofconnections2)){
+	
+			
 
+			remakeconnections(listofconnections2);
+		
 				
 
 
-			}
-
-
-
-
+			
 
 			//sort listofconnections2
 
@@ -372,8 +371,27 @@ int remakeconnections(struct connection** listofconnections2){
 						con2 -> toPlayer1  = -1;
 						con2 -> fromPlayer2 = -1;
 						con2 -> toPlayer2 = -1;
-							
+						
 						//send go1
+						struct message* msg = malloc(sizeof(struct message));
+						strcpy(msg -> servermsg,"go1");
+						msg -> setindex = con -> indexPlayer1;
+						msg -> setindexopponent = con -> indexPlayer2;
+						struct message* msg2 = malloc(sizeof(struct message));
+						strcpy(msg2 -> servermsg, "recieveindex");
+						msg2 -> setindex = con -> indexPlayer2;
+						msg2 -> setindexopponent = con -> indexPlayer1;
+
+
+						struct message* msg3 = malloc(sizeof(struct message));
+						strcpy(msg3 -> servermsg, "pass");
+						//server sends "recieve index", waits, then sends pass(go1 automatically prints index)
+						write(con -> toPlayer1, msg, sizeof(struct message));
+						write(con -> toPlayer2, msg2, sizeof(struct message));
+						sleep(1);
+						write(con -> toPlayer2, msg3, sizeof(struct message));
+
+
 					}
 					else{
 						con -> toPlayer1 = con2 -> toWinner;
@@ -403,6 +421,23 @@ int remakeconnections(struct connection** listofconnections2){
 						con2 -> fromPlayer2 = -1;
 						con2 -> toPlayer2 = -1;
 						//send pass
+						struct message* msg = malloc(sizeof(struct message));
+						strcpy(msg -> servermsg, "go1");
+						msg -> setindex = con -> indexPlayer1;
+						msg -> setindexopponent = con -> indexPlayer2;
+						struct message* msg2 = malloc(sizeof(struct message));
+						strcpy(msg2 -> servermsg, "recieveindex");
+						msg2 -> setindex = con -> indexPlayer2;
+						msg2 -> setindexopponent = con -> indexPlayer1;
+
+
+						struct message* msg3 = malloc(sizeof(struct message));
+						strcpy(msg3 -> servermsg,"pass");
+						//server sends "recieve index", waits, then sends pass(go1 automatically prints index)
+						write(con -> toPlayer1, msg, sizeof(struct message));
+						write(con -> toPlayer2, msg2, sizeof(struct message));
+						sleep(1);
+						write(con -> toPlayer2, msg3, sizeof(struct message));
 					}
 					
 				}

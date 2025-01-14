@@ -8,6 +8,7 @@ int main(){
 	int fromPlayer;
 	toPlayer = playerhandshake(&fromPlayer);
 	signal(SIGINT, quit);
+	returnfromPlayer(fromPlayer);
 	int waiting = 0;
 	printf("Waiting for server... \n");
 	while(1){
@@ -182,15 +183,38 @@ int main(){
 }
 
 
+
+
+
 static void quit(int signum){
 
-
-
+	int index = returnindex(0);
+	int fromPlayer = returnfromPlayer(0);
 	printf("Player Exiting... \n");
+	wait(1);
+	//send QUIT to server(preventing broken pipe error)
+	struct message* msg = malloc(sizeof(struct message));
+	strcpy(msg -> servermsg, "QUIT");
+	msg -> setindex = index;
+	write(fromPlayer, msg), sizeof(struct message);
 	exit(0);
 
 }
 
+static int returnfromPlayer(int fromPlayer){
+	static int fromPlay = 0;
+	fromPlay += fromPlayer;
+	return fromPlay;
+	
+
+}
+
+static int returnindex(int index){
+	static int myindex = 0;
+	myindex += index;
+	return myindex;
+
+}
 
 int random_index(){
 	int randomIndex;
