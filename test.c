@@ -19,34 +19,147 @@ int main(){
 
 
 	struct connection** listofconnections2 = malloc(sizeof(struct connection) * 6);
-	for(int i = 0; i < 6; i ++){
+	for(int i = 0; i < 4; i ++){
 
 		struct connection* con = malloc(sizeof(struct connection));
 		con -> fromPlayer1 = i;
 		con -> toPlayer1 = i;
 		con -> fromPlayer2 = i;
-		con -> fromPlayer2 = i;
+		con -> toPlayer2 = i;
 		listofconnections2[i] = con;	
 
 	}
 	printconnections(listofconnections2);
 	listofconnections2 = sortconnections(listofconnections2);
 	printconnections(listofconnections2);
+	
+
+	printf("------------------------------- \n");
+	
+	
+	listofconnections2[3] -> toPlayer1 = 30;
+	listofconnections2[3] -> fromPlayer1 = 30;
+	listofconnections2[2] -> toPlayer2 = 20;
+	listofconnections2[2] -> fromPlayer2 = 20;
+	
+
+	listofconnections2[3] -> toWinner = 30;
+	listofconnections2[3] -> fromWinner = 30;
+	listofconnections2[2] -> toWinner = 20;
+	listofconnections2[2] -> fromWinner = 20;
+	printconnections(listofconnections2);
+	printf("------------------------------- \n");
+	remakeconnections(listofconnections2);
+	printconnections(listofconnections2);
+
+	
+	printf("------------------------------- \n");
+
+
+	
 
 
 }
 
 
-void printconnections(struct connection** listofconnections2){
-	for(int i = 0; i < 6; i ++){
-		
+struct connection** remakeconnections(struct connection** listofconnections2){
+	
+	
+	for(int i = 0; i < 4; i ++){
 		struct connection* con = listofconnections2[i];
-		printf("PLAYER1INDEX: %d \n", con -> indexPlayer1);
-		printf("FROMPLAYER1: %d \n", con -> fromPlayer1);
-		printf("PLAYER2INDEX: %d \n", con -> indexPlayer2);
-		printf("FROMPLAYER2: %d \n", con -> fromPlayer2);
+		//set winner to -1 on default when creating connections
+		if(con -> toWinner != -1 && con -> fromWinner != -1){
+			//check who won
+			int play1 = 0;
+			if(con -> toWinner == con -> toPlayer1 && con -> fromWinner == con -> fromPlayer1){
+				play1 = 1;
+
+			}
+
+
+
+
+
+			for(int j = 0; j < 4; j ++){
+				if(j == i){
+					continue;
+				}
+				struct connection* con2 = listofconnections2[j];
+				if(con2 -> toWinner != -1 && con2 -> fromWinner != -1){
+					if(play1){
+						//add index as well
+						con -> toPlayer2 = con2 -> toWinner;
+						con -> fromPlayer2 = con2 -> fromWinner;
+						
+						con -> toWinner = -1;
+						con -> fromWinner = -1;
+						if(con2 -> fromPlayer1 == con2 -> fromWinner){
+							con -> indexPlayer2 = con2 -> indexPlayer1;
+							con2 -> indexPlayer1 = -1;
+							con2 -> indexPlayer2 = -1;
+						}
+						else{
+							con -> indexPlayer2 = con2 -> indexPlayer2;
+							con2 -> indexPlayer1 = -1;
+							con2 -> indexPlayer2 = -1;
+
+
+						}
+						
+						//reset everything
+						con2 -> toWinner = -1;
+						con2 -> fromWinner = -1;
+						con2 -> fromPlayer1 = -1;
+						con2 -> toPlayer1  = -1;
+						con2 -> fromPlayer2 = -1;
+						con2 -> toPlayer2 = -1;
+							
+						//send go1
+					}
+					else{
+						con -> toPlayer1 = con2 -> toWinner;
+						con -> fromPlayer1 = con2 -> fromWinner;
+						
+						con -> toWinner = -1;
+						con -> fromWinner = -1;
+						if(con2 -> fromPlayer1 == con2 -> fromWinner){
+							printf("WORKS \n");
+							con -> indexPlayer1 = con2 -> indexPlayer1;
+							con2 -> indexPlayer1 = -1;
+							con2 -> indexPlayer2 = -1;
+
+						}
+						else{
+							printf("DOESNT \n");
+							con -> indexPlayer1 = con2 -> indexPlayer2;
+							con2 -> indexPlayer1 = -1;
+							con2 -> indexPlayer2 = -1;
+
+
+						}
+
+						con2 -> toWinner = -1;
+						con2 -> fromWinner = -1;
+						con2 -> fromPlayer1 = -1;
+						con2 -> toPlayer1  = -1;
+						con2 -> fromPlayer2 = -1;
+						con2 -> toPlayer2 = -1;
+						//send pass
+					}
+					
+				}
+				
+
+			}
+			con -> toWinner = -1;
+			con -> fromWinner = -1;
+			
+
+		}
+
 
 	}
+
 
 
 }
@@ -55,16 +168,16 @@ void printconnections(struct connection** listofconnections2){
 
 struct connection** sortconnections(struct connection** listofconnections2){
 	int n = 0;
-	struct connection** newlistofconnections2 = malloc(sizeof(struct connection) * 6);
-	int* listofindices = malloc(sizeof(int) * 24);
-	for(int i = 0; i < 6; i ++){
+	struct connection** newlistofconnections2 = malloc(sizeof(struct connection) * 4);
+	int* listofindices = malloc(sizeof(int) * 16);
+	for(int i = 0; i < 4; i ++){
 		//check if not empty
 		struct connection* con = listofconnections2[i];
 		con -> indexPlayer1 = generateindex();
-		printf("GENERATEDINDEX1: %d \n", con -> indexPlayer1);
+		
 		//might need to sleep here
 		con -> indexPlayer2 = generateindex();
-		printf("GENERATEDINDEX2: %d \n", con -> indexPlayer2);	
+		
 		listofindices[n] = con -> indexPlayer1;
 		n += 1;
 		listofindices[n] = con -> indexPlayer2;
@@ -79,22 +192,25 @@ struct connection** sortconnections(struct connection** listofconnections2){
 		struct connection* newcon = malloc(sizeof(struct connection));
 		newcon -> toPlayer1 = -1;
 		newcon -> toPlayer2 = -1;
-		for(int j = 0; j < 6; j ++){
+		for(int j = 0; j < 4; j ++){
 			
 			
 			struct connection* con = listofconnections2[j];
-			printf("CON INDEX1: %d , CON INDEX2: %d \n", con ->indexPlayer1, con ->indexPlayer2);
-			printf("CHECKING FOR1: %d, CHECKING FOR2: %d \n", listofindices[i], listofindices[i + 1]);
+			
 			if(con -> indexPlayer1 == listofindices[i] || con -> indexPlayer1 == listofindices[i + 1]){
 				if(newcon -> toPlayer1 == -1){
 					newcon -> toPlayer1 = con -> toPlayer1;
 					newcon -> fromPlayer1 = con -> fromPlayer1;
 					newcon -> indexPlayer1 = con -> indexPlayer1;
+					newcon -> toWinner = -1;
+					newcon -> fromWinner = -1;
 				}
 				else if(newcon -> toPlayer2 == -1){
 					newcon -> toPlayer2 = con -> toPlayer1;
 					newcon -> fromPlayer2 = con -> fromPlayer1;
 					newcon -> indexPlayer2 = con -> indexPlayer1;
+					newcon -> toWinner = -1;
+					newcon -> fromWinner = -1;
 				}
 				
 				
@@ -107,12 +223,16 @@ struct connection** sortconnections(struct connection** listofconnections2){
 				if(newcon -> toPlayer1 == -1){
 					newcon -> toPlayer1 = con -> toPlayer2;
 					newcon -> fromPlayer1 = con -> fromPlayer2;
-					newcon -> indexPlayer1 = con -> indexPlayer2;		
+					newcon -> indexPlayer1 = con -> indexPlayer2;	
+					newcon -> toWinner = -1;
+					newcon -> fromWinner = -1;	
 				}
 				else if(newcon -> toPlayer2 == -1){
 					newcon -> toPlayer2 = con -> toPlayer2;
 					newcon -> fromPlayer2 = con -> fromPlayer2;
 					newcon -> indexPlayer2 = con -> indexPlayer2;
+					newcon -> toWinner = -1;
+					newcon -> fromWinner = -1;
 				}
 				
 				
@@ -121,8 +241,7 @@ struct connection** sortconnections(struct connection** listofconnections2){
 			
 		}
 		newlistofconnections2[qq] = newcon;
-		printf("NEWCON INDEX1: %d \n", newcon ->indexPlayer1);
-		printf("NEWCON INDEX2: %d \n", newcon ->indexPlayer2);
+		
 		qq += 1;
 			
 		
@@ -131,6 +250,22 @@ struct connection** sortconnections(struct connection** listofconnections2){
 	return newlistofconnections2;
 
 }
+void printconnections(struct connection** listofconnections2){
+	for(int i = 0; i < 4; i ++){
+		
+		struct connection* con = listofconnections2[i];
+		printf("PLAYER1INDEX: %d \n", con -> indexPlayer1);
+		printf("FROMPLAYER1: %d \n", con -> fromPlayer1);
+		printf("PLAYER2INDEX: %d \n", con -> indexPlayer2);
+		printf("FROMPLAYER2: %d \n", con -> fromPlayer2);
+		printf("TOWINNER: %d \n", con -> toWinner);
+		printf("FROMWINNER: %d \n", con ->fromWinner);
+
+	}
+
+
+}
+
 
 
 int* insertionsort(int* listofindices, int size){

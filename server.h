@@ -56,5 +56,5 @@ int* insertionsort(int* listofindices, int size);
 struct connection** sortconnections(struct connection** listofconnections2);
 int mainserversetup();
 int serverconnect(int* fromPlayer);
-
+struct connection** remakeconnections(struct connection** listofconnections2);
 static void ignore_SIGPIPE(int signum);

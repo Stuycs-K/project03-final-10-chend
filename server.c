@@ -56,7 +56,7 @@ int main(){
 		}
 		else{
 			if(unsorted){
-
+				printconnections(listofconnections2);
 				listofconnections2 = sortconnections(listofconnections2);
 				for(int i = 0; i < 4; i ++){
 					struct connection* con = listofconnections2[i];
@@ -89,7 +89,7 @@ int main(){
 					write(con -> toPlayer2, proceed3, sizeof(struct message));
 					
 				}
-				
+				printconnections(listofconnections2);
 				unsorted = 0;
 			}
 			//sort listofconnections2
@@ -267,6 +267,11 @@ int main(){
 
 
 
+
+
+
+
+
 static int returnplayer1choice(int player1choice){
 	//int player1choice is either 1, 2, or 3(set value)
 	
@@ -290,11 +295,119 @@ void printconnections(struct connection** listofconnections2){
 		printf("FROMPLAYER1: %d \n", con -> fromPlayer1);
 		printf("PLAYER2INDEX: %d \n", con -> indexPlayer2);
 		printf("FROMPLAYER2: %d \n", con -> fromPlayer2);
+		printf("TOWINNER: %d \n", con -> toWinner);
+		printf("FROMWINNER: %d \n", con ->fromWinner);
 
 	}
 
 
 }
+
+
+
+struct connection** remakeconnections(struct connection** listofconnections2){
+	
+	
+	for(int i = 0; i < 4; i ++){
+		struct connection* con = listofconnections2[i];
+		//set winner to -1 on default when creating connections
+		if(con -> toWinner != -1 && con -> fromWinner != -1){
+			//check who won
+			int play1 = 0;
+			if(con -> toWinner == con -> toPlayer1 && con -> fromWinner == con -> fromPlayer1){
+				play1 = 1;
+
+			}
+
+
+
+
+
+			for(int j = 0; j < 4; j ++){
+				if(j == i){
+					continue;
+				}
+				struct connection* con2 = listofconnections2[j];
+				if(con2 -> toWinner != -1 && con2 -> fromWinner != -1){
+					if(play1){
+						//add index as well
+						con -> toPlayer2 = con2 -> toWinner;
+						con -> fromPlayer2 = con2 -> fromWinner;
+						
+						con -> toWinner = -1;
+						con -> fromWinner = -1;
+						if(con2 -> fromPlayer1 == con2 -> fromWinner){
+							con -> indexPlayer2 = con2 -> indexPlayer1;
+							con2 -> indexPlayer1 = -1;
+							con2 -> indexPlayer2 = -1;
+
+						}
+						else{
+							con -> indexPlayer2 = con2 -> indexPlayer2;
+							con2 -> indexPlayer1 = -1;
+							con2 -> indexPlayer2 = -1;
+
+
+						}
+						
+						//reset everything
+						con2 -> toWinner = -1;
+						con2 -> fromWinner = -1;
+						con2 -> fromPlayer1 = -1;
+						con2 -> toPlayer1  = -1;
+						con2 -> fromPlayer2 = -1;
+						con2 -> toPlayer2 = -1;
+							
+						//send go1
+					}
+					else{
+						con -> toPlayer1 = con2 -> toWinner;
+						con -> fromPlayer1 = con2 -> fromWinner;
+						
+						con -> toWinner = -1;
+						con -> fromWinner = -1;
+						if(con2 -> fromPlayer1 == con2 -> fromWinner){
+							
+							con -> indexPlayer1 = con2 -> indexPlayer1;
+							con2 -> indexPlayer1 = -1;
+							con2 -> indexPlayer2 = -1;
+
+						}
+						else{
+							con -> indexPlayer1 = con2 -> indexPlayer2;
+							con2 -> indexPlayer1 = -1;
+							con2 -> indexPlayer2 = -1;
+
+
+						}
+
+						con2 -> toWinner = -1;
+						con2 -> fromWinner = -1;
+						con2 -> fromPlayer1 = -1;
+						con2 -> toPlayer1  = -1;
+						con2 -> fromPlayer2 = -1;
+						con2 -> toPlayer2 = -1;
+						//send pass
+					}
+					
+				}
+				
+
+			}
+			con -> toWinner = -1;
+			con -> fromWinner = -1;
+			
+
+		}
+
+
+	}
+
+
+
+}
+
+
 
 struct connection** sortconnections(struct connection** listofconnections2){
 	int n = 0;
@@ -332,11 +445,15 @@ struct connection** sortconnections(struct connection** listofconnections2){
 					newcon -> toPlayer1 = con -> toPlayer1;
 					newcon -> fromPlayer1 = con -> fromPlayer1;
 					newcon -> indexPlayer1 = con -> indexPlayer1;
+					newcon -> toWinner = -1;
+					newcon -> fromWinner = -1;
 				}
 				else if(newcon -> toPlayer2 == -1){
 					newcon -> toPlayer2 = con -> toPlayer1;
 					newcon -> fromPlayer2 = con -> fromPlayer1;
 					newcon -> indexPlayer2 = con -> indexPlayer1;
+					newcon -> toWinner = -1;
+					newcon -> fromWinner = -1;
 				}
 				
 				
@@ -349,12 +466,16 @@ struct connection** sortconnections(struct connection** listofconnections2){
 				if(newcon -> toPlayer1 == -1){
 					newcon -> toPlayer1 = con -> toPlayer2;
 					newcon -> fromPlayer1 = con -> fromPlayer2;
-					newcon -> indexPlayer1 = con -> indexPlayer2;		
+					newcon -> indexPlayer1 = con -> indexPlayer2;	
+					newcon -> toWinner = -1;
+					newcon -> fromWinner = -1;	
 				}
 				else if(newcon -> toPlayer2 == -1){
 					newcon -> toPlayer2 = con -> toPlayer2;
 					newcon -> fromPlayer2 = con -> fromPlayer2;
 					newcon -> indexPlayer2 = con -> indexPlayer2;
+					newcon -> toWinner = -1;
+					newcon -> fromWinner = -1;
 				}
 				
 				
