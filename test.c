@@ -62,7 +62,7 @@ int main(){
 }
 
 
-struct connection** remakeconnections(struct connection** listofconnections2){
+int remakeconnections(struct connection** listofconnections2){
 	
 	
 	for(int i = 0; i < 4; i ++){

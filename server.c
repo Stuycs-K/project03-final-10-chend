@@ -92,6 +92,20 @@ int main(){
 				printconnections(listofconnections2);
 				unsorted = 0;
 			}
+
+
+			//remake and check if resort did anything
+			if(remakeconnections(listofconnections2)){
+
+				
+
+
+			}
+
+
+
+
+
 			//sort listofconnections2
 
 			//send this msg to any new players
@@ -305,9 +319,9 @@ void printconnections(struct connection** listofconnections2){
 
 
 
-struct connection** remakeconnections(struct connection** listofconnections2){
+int remakeconnections(struct connection** listofconnections2){
 	
-	
+	int resorted = 0;
 	for(int i = 0; i < 4; i ++){
 		struct connection* con = listofconnections2[i];
 		//set winner to -1 on default when creating connections
@@ -329,6 +343,7 @@ struct connection** remakeconnections(struct connection** listofconnections2){
 				}
 				struct connection* con2 = listofconnections2[j];
 				if(con2 -> toWinner != -1 && con2 -> fromWinner != -1){
+					resorted = 1;
 					if(play1){
 						//add index as well
 						con -> toPlayer2 = con2 -> toWinner;
@@ -404,7 +419,7 @@ struct connection** remakeconnections(struct connection** listofconnections2){
 	}
 
 
-
+	return resorted;
 }
 
 

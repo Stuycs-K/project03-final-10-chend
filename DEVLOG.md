@@ -54,3 +54,6 @@ Updated structs and functions for 8 players instead of 12(tournament doesn't wor
 Updated PROPOSAL.md - 10 min
 
 
+### 2024-01-13 - Finished Draws And Finishing Up Tournament
+Finished handling draws in rock-paper-scissors - 30 min
+Started managing brackets(almost finished) and matchmaking starts with new winners - 35 min
