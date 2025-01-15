@@ -10,7 +10,7 @@ int main(){
 	int unsorted = 1;
 
 	signal(SIGPIPE, ignore_SIGPIPE);
-	fd_set listofconnections;
+	
 	
 	
 
@@ -55,8 +55,9 @@ int main(){
 			
 		}
 		else{
+			fd_set listofconnections;
 			if(unsorted){
-				printconnections(listofconnections2);
+				
 				listofconnections2 = sortconnections(listofconnections2);
 				for(int i = 0; i < 4; i ++){
 					struct connection* con = listofconnections2[i];
@@ -89,7 +90,7 @@ int main(){
 					write(con -> toPlayer2, proceed3, sizeof(struct message));
 					
 				}
-				printconnections(listofconnections2);
+				
 				unsorted = 0;
 			}
 
@@ -99,8 +100,8 @@ int main(){
 			
 
 			remakeconnections(listofconnections2);
-		
-				
+			
+			printf("CYCLE \n");	
 
 
 			
@@ -118,7 +119,7 @@ int main(){
 			//select file desc again
 			for(int i = 0; i < 4; i ++){
 				struct connection* con = listofconnections2[i];
-				if(con -> fromPlayer1 != -1){
+				if(con -> fromPlayer1 != -1 && con -> fromWinner == -1 && con -> toWinner == -1){
 					
 					//send msg to all player1s to init
 					
@@ -129,7 +130,7 @@ int main(){
 					
 					FD_SET(con -> fromPlayer1, &listofconnections);
 				}
-				if(con -> fromPlayer2 != -1){
+				if(con -> fromPlayer2 != -1 && con -> fromWinner == -1 && con -> toWinner == -1){
 					
 					if(con -> fromPlayer2 > maxfile){
 						maxfile = con-> fromPlayer2;
@@ -162,13 +163,20 @@ int main(){
 
 					//msg to other player
 					struct message* newmsg2 = malloc(sizeof(struct message));
-
-					read(con -> fromPlayer1, msg, sizeof(struct message));
+  
+					int bytes = read(con -> fromPlayer1, msg, sizeof(struct message));
+					if(bytes <= 0){
+						//disconnected
+						FD_CLR(con -> fromPlayer1, &listofconnections);
+						printf("DISCONNECT \n");
+						continue;
+					}
 					printf("PLAYER1 PICKED: %d \n", msg -> value);
 					returnplayer1choice(msg -> value);
 
-
+						
 					if(strcmp(msg -> servermsg, "go2") == 0){
+						printf("GOOOOOOOOOO2 \n");
 						strcpy(newmsg -> servermsg, "go2");
 						newmsg -> value = msg -> value;
 						write(con -> toPlayer2, newmsg, sizeof(struct message));
@@ -183,12 +191,21 @@ int main(){
 					//else for exit
 				}
 				else if(FD_ISSET(con -> fromPlayer2, &listofconnections)){
-					read(con -> fromPlayer2, msg, sizeof(struct message));
+					int bytes = read(con -> fromPlayer2, msg, sizeof(struct message));
+					if(bytes <= 0){
+						FD_CLR(con -> fromPlayer2, &listofconnections);
+						printf("DISCONNECT \n");
+						continue;
+					}
 					struct message* newmsg = malloc(sizeof(struct message));
 					//msg to other player
 					struct message* newmsg2 = malloc(sizeof(struct message));
 					if(strcmp(msg -> servermsg, "won") == 0){
-						
+						//SET WINNER HERE
+
+
+						con -> toWinner = con -> toPlayer2;
+						con -> fromWinner = con -> fromPlayer2;
 						//win
 						//tell player1 to exit(SIGINT)
 						//send "lose" to player1 & the choice opponent made(send choice from player2 to player1, player2 already knows since they decided who won)
@@ -204,8 +221,12 @@ int main(){
 						write(con -> toPlayer1, newmsg2, sizeof(struct message));
 						write(con -> toPlayer2,	newmsg, sizeof(struct message));
 
+						
+
 					}
 					else if(strcmp(msg -> servermsg, "lose") == 0){
+						con -> toWinner = con -> toPlayer1;
+						con -> fromWinner = con -> fromPlayer1;
 
 						//lose
 						//tell player2 to exit(SIGINT)
@@ -221,6 +242,9 @@ int main(){
 
 						write(con -> toPlayer1, newmsg, sizeof(struct message));
 						write(con -> toPlayer2, newmsg2, sizeof(struct message));
+						
+						
+
 					}
 					else if(strcmp(msg -> servermsg, "draw") == 0){
 
@@ -266,7 +290,7 @@ int main(){
 			}
 			//zero out 
 			FD_ZERO(&listofconnections);
-
+			sleep(0.5);
 			//if so, get the message from that desc to the player its playing against
 			//write to the opponent using 
 		}
@@ -444,10 +468,7 @@ int remakeconnections(struct connection** listofconnections2){
 				
 
 			}
-			con -> toWinner = -1;
-			con -> fromWinner = -1;
 			
-
 		}
 
 

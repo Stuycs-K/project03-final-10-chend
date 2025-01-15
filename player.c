@@ -14,7 +14,12 @@ int main(){
 	while(1){
 		//read until msg says "pass"
 		struct message* msg = malloc(sizeof(struct message));
-		read(toPlayer, msg, sizeof(struct message));
+		int bytes = read(toPlayer, msg, sizeof(struct message));
+		if(bytes <= 0){
+
+			printf("Server Disconnected! \n");
+			exit(1);
+		}
 		printf("SERVER SENT MSG: %s \n", msg -> servermsg);
 
 
@@ -22,6 +27,7 @@ int main(){
 			//for player2
 			//player1 got go
 			int myindex = msg -> setindex;
+			returnindex(myindex);
 			int opponentindex = msg -> setindexopponent;
 			printf("Your index is %d \n", myindex);
 			printf("You are playing against index %d \n", opponentindex);
@@ -177,6 +183,8 @@ int main(){
 			printf("New round starting... \n");
 
 		}
+		free(msg);
+		msg = NULL;
 	
 
 	}
@@ -191,13 +199,13 @@ static void quit(int signum){
 	int index = returnindex(0);
 	int fromPlayer = returnfromPlayer(0);
 	printf("Player Exiting... \n");
-	wait(1);
+	sleep(1);
 	//send QUIT to server(preventing broken pipe error)
-	struct message* msg = malloc(sizeof(struct message));
-	strcpy(msg -> servermsg, "QUIT");
-	msg -> setindex = index;
-	write(fromPlayer, msg), sizeof(struct message);
-	exit(0);
+	//struct message* msg = malloc(sizeof(struct message));
+	//strcpy(msg -> servermsg, "QUIT");
+	//msg -> setindex = index;
+	//write(fromPlayer, msg, sizeof(struct message);
+	exit(1);
 
 }
 

@@ -39,12 +39,23 @@ int main(){
 	
 	listofconnections2[3] -> toPlayer1 = 30;
 	listofconnections2[3] -> fromPlayer1 = 30;
+	listofconnections2[3] -> toWinner = 30;
+	listofconnections2[3] -> fromWinner = 30;
+	printconnections(listofconnections2);
+	printf("TESTING HERE: \n");
+	remakeconnections(listofconnections2);
+	printconnections(listofconnections2);
+	printf("------------------------------- \n");
+
+
+
+
+
 	listofconnections2[2] -> toPlayer2 = 20;
 	listofconnections2[2] -> fromPlayer2 = 20;
 	
 
-	listofconnections2[3] -> toWinner = 30;
-	listofconnections2[3] -> fromWinner = 30;
+	
 	listofconnections2[2] -> toWinner = 20;
 	listofconnections2[2] -> fromWinner = 20;
 	printconnections(listofconnections2);
@@ -151,8 +162,7 @@ int remakeconnections(struct connection** listofconnections2){
 				
 
 			}
-			con -> toWinner = -1;
-			con -> fromWinner = -1;
+			
 			
 
 		}
