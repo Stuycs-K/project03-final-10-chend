@@ -93,16 +93,30 @@ int main(){
 				
 				unsorted = 0;
 			}
-
+			
 
 			//remake and check if resort did anything
 	
 			
 
 			remakeconnections(listofconnections2);
-			
-			printf("CYCLE \n");	
+			int numplayers = 0;
+			int lastmatch = 0;
+			//check if server should send "wonall" and end tournament
+			for(int i = 0; i < 4; i++){
+				struct connection* con = listofconnections2[i];
+				if(con -> fromPlayer1 != -1){
+					numplayers += 1;
+				}
+				if(con -> fromPlayer2 != -1){
+					numplayers += 1;					
+				}
 
+
+			}
+			if(numplayers == 2){
+				lastmatch = 1;
+			}
 
 			
 
@@ -211,16 +225,31 @@ int main(){
 						//send "lose" to player1 & the choice opponent made(send choice from player2 to player1, player2 already knows since they decided who won)
 						//send "won" to player2
 						int opponentchoice = returnplayer1choice(-1);
+						if(lastmatch){
+								strcpy(newmsg -> servermsg, "wonall");
+								newmsg -> value = opponentchoice;
+								
+	
+						}
+						else{
+							strcpy(newmsg -> servermsg, "won");
+							newmsg -> value = opponentchoice;
 
-						strcpy(newmsg -> servermsg, "won");
-						newmsg -> value = opponentchoice;
+
+
+						}
+						
 
 						strcpy(newmsg2 -> servermsg, "lose");
 						newmsg2 -> value = msg -> value;
 
 						write(con -> toPlayer1, newmsg2, sizeof(struct message));
 						write(con -> toPlayer2,	newmsg, sizeof(struct message));
+						if(lastmatch){
+							sleep(1);
+							exit(1);
 
+						}
 						
 
 					}
