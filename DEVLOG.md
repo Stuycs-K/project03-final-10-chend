@@ -57,3 +57,9 @@ Updated PROPOSAL.md - 10 min
 ### 2024-01-13 - Finished Draws And Finishing Up Tournament
 Finished handling draws in rock-paper-scissors - 30 min
 Started managing brackets(almost finished) and matchmaking starts with new winners - 35 min
+
+
+### 2024-01-14 - Fixed Major Bug With Bracket Matchmaking
+Fixed major issue with matchmaking and starting new rounds - 60 min
+Finishing up tournament(play history next) - 10 min
+
