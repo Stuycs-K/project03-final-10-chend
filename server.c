@@ -15,7 +15,7 @@ int main(){
 	
 
 	
-	int history = open("history.txt", O_RDWR, 0666);
+	int history = open("history.txt", O_RDWR | O_APPEND | O_TRUNC , 0666);
 	
 	struct connection** listofconnections2 = malloc(sizeof(struct connection) * 4);
 	for(int i = 0; i < 4; i ++){
@@ -191,8 +191,8 @@ int main(){
 
 
 					char* loghistory = malloc(256);
-					sprintf(loghistory, "Player %d chose: %d", con -> fromPlayer1, msg -> value);
-					write(history, loghistory, 255);
+					int bytes2 = sprintf(loghistory, "Player %d chose: %d \n", con -> fromPlayer1, msg -> value);
+					write(history, loghistory, bytes2);
 
 					
 
@@ -256,12 +256,12 @@ int main(){
 
 
 								char* loghistory = malloc(256);
-								sprintf(loghistory, "Player %d chose: %d", con -> fromPlayer2, msg -> value);
-								write(history, loghistory, 255);
+								int bytes = sprintf(loghistory, "Player %d chose: %d \n", con -> fromPlayer2, msg -> value);
+								write(history, loghistory, bytes);
 
 								char* result = malloc(256);
-								sprintf(loghistory, "Player %d won the tournament!!!", con -> fromPlayer2);
-								write(history, result, 255);
+								bytes = sprintf(result, "Player %d won the tournament!!! \n", con -> fromPlayer2);
+								write(history, result, bytes);
 
 	
 						}
@@ -272,12 +272,12 @@ int main(){
 
 
 							char* loghistory = malloc(256);
-							sprintf(loghistory, "Player %d chose: %d", con -> fromPlayer2, msg -> value);
-							write(history, loghistory, 255);
+							int bytes = sprintf(loghistory, "Player %d chose: %d \n", con -> fromPlayer2, msg -> value);
+							write(history, loghistory, bytes);
 
 							char* result = malloc(256);
-							sprintf(loghistory, "Player %d won", con -> fromPlayer2);
-							write(history, result, 255);
+							bytes = sprintf(result, "Player %d won \n", con -> fromPlayer2);
+							write(history, result, bytes);
 
 
 
@@ -314,12 +314,12 @@ int main(){
 
 
 								char* loghistory = malloc(256);
-								sprintf(loghistory, "Player %d chose: %d", con -> fromPlayer1, opponentchoice);
-								write(history, loghistory, 255);
+								int bytes = sprintf(loghistory, "Player %d chose: %d \n", con -> fromPlayer1, opponentchoice);
+								write(history, loghistory, bytes);
 
 								char* result = malloc(256);
-								sprintf(loghistory, "Player %d won the tournament!!!", con -> fromPlayer1);
-								write(history, result, 255);
+								bytes = sprintf(result, "Player %d won the tournament!!! \n", con -> fromPlayer1);
+								write(history, result, bytes);
 
 	
 						}
@@ -330,12 +330,12 @@ int main(){
 
 
 							char* loghistory = malloc(256);
-							sprintf(loghistory, "Player %d chose: %d", con -> fromPlayer1, opponentchoice);
-							write(history, loghistory, 255);
+							int bytes = sprintf(loghistory, "Player %d chose: %d \n", con -> fromPlayer1, opponentchoice);
+							write(history, loghistory, bytes);
 
 							char* result = malloc(256);
-							sprintf(loghistory, "Player %d won", con -> fromPlayer1);
-							write(history, result, 255);
+							bytes = sprintf(result, "Player %d won \n", con -> fromPlayer1);
+							write(history, result, bytes);
 
 
 
@@ -387,6 +387,11 @@ int main(){
 						strcpy(newmsg4 -> servermsg, "pass");
 						write(con -> toPlayer1, newmsg3, sizeof(struct message));
 						write(con -> toPlayer2, newmsg4, sizeof(struct message));
+						char* loghistory = malloc(256);
+						int bytes = sprintf(loghistory, "Player %d chose: %d \n", con -> fromPlayer2, opponentchoice);
+						write(history, loghistory, bytes);
+
+						
 
 						
 					}
