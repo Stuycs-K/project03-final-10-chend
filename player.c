@@ -103,6 +103,8 @@ int main(){
 			}
 			
 			newmsg -> value = choice;
+			//MIGHT HAPPEN HERE
+			
 			strcpy(newmsg -> servermsg, "go2");
 			write(fromPlayer, newmsg, sizeof(struct message));
 			waiting = 0;

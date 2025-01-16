@@ -1,9 +1,5 @@
-Player 4 chose: 3 
-Player 14 chose: 3 
-Player 4 chose: 3 
-Player 4 chose: 3 
+Player 4 chose: 1 
+Player 6 chose: 1 
+Player 4 chose: 2 
+Player 4 chose: 2 
 Player 4 won 
-Player 6 chose: 2 
-Player 10 chose: 3 
-Player 16 chose: 3 
-Player 16 won 

@@ -197,7 +197,7 @@ int main(){
 					
 
 
-
+				
 					returnplayer1choice(msg -> value);
 					
 						
@@ -205,6 +205,9 @@ int main(){
 						printf("GOOOOOOOOOO2 \n");
 						strcpy(newmsg -> servermsg, "go2");
 						newmsg -> value = msg -> value;
+						//BUG MIGHT HAPPEN HERE
+						printf("OpponentVal: %d \n", msg -> value);
+
 						write(con -> toPlayer2, newmsg, sizeof(struct message));
 						
 						strcpy(newmsg2 -> servermsg, "pass");
@@ -270,7 +273,7 @@ int main(){
 						}
 						else{
 							strcpy(newmsg -> servermsg, "won");
-							newmsg -> value = opponentchoice;
+							newmsg -> value = msg -> value;
 
 
 
@@ -296,7 +299,7 @@ int main(){
 							sleep(1);
 							exit(1);
 
-						}
+					}
 						
 
 					}
@@ -312,7 +315,7 @@ int main(){
 
 						if(lastmatch){
 								strcpy(newmsg -> servermsg, "wonall");
-								newmsg -> value = opponentchoice;
+								newmsg -> value = msg -> value;
 
 
 
@@ -328,7 +331,7 @@ int main(){
 						}
 						else{
 							strcpy(newmsg -> servermsg, "won");
-							newmsg -> value = opponentchoice;
+							newmsg -> value = msg -> value;
 
 
 
