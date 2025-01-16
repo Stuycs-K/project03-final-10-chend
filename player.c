@@ -50,7 +50,7 @@ int main(){
 				sscanf(linebuff, "%d", &choice);				
 				printf("CHOICE: %d \n", choice);
 			}
-			printf("CHOICE: %d \n", choice);
+		
 			//WHO WON HERE
 			if((choice == 1 && msg -> value == 3) || (choice == 2 && msg -> value == 1) || (choice == 3 && msg -> value == 2)){
 				//win

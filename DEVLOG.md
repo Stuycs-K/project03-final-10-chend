@@ -63,3 +63,8 @@ Started managing brackets(almost finished) and matchmaking starts with new winne
 Fixed major issue with matchmaking and starting new rounds - 60 min
 Finishing up tournament(play history next) - 10 min
 
+### 2024-01-15 - Finished Tournament
+Finished Tournament - 40 min
+Fixing up minor bugs - 10 min
+Fixing up play history bugs - 10 min
+

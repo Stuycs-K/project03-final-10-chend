@@ -189,17 +189,17 @@ int main(){
 
 					//write to history file
 
-
+					if(msg -> value == 1 || msg -> value == 2 || msg -> value == 3){
 					char* loghistory = malloc(256);
 					int bytes2 = sprintf(loghistory, "Player %d chose: %d \n", con -> fromPlayer1, msg -> value);
 					write(history, loghistory, bytes2);
-
+					}
 					
 
 
 
 					returnplayer1choice(msg -> value);
-
+					
 						
 					if(strcmp(msg -> servermsg, "go2") == 0){
 						printf("GOOOOOOOOOO2 \n");
@@ -223,7 +223,10 @@ int main(){
 					if(strcmp(msg -> servermsg, "QUIT") == 0){
 						
 						//remember to write to file "player... disconnected"
-
+						//send 1000 to player2
+						//for player2 send server "lose" and quit
+						
+						
 
 					}
 				
@@ -360,13 +363,13 @@ int main(){
 					else if(strcmp(msg -> servermsg, "draw") == 0){
 
 						//draw
-						int opponentchoice = returnplayer1choice(-1);
+						
 
 						strcpy(newmsg -> servermsg, "draw");
 						newmsg -> value = msg -> value;
 
 						strcpy(newmsg2 -> servermsg, "draw");
-						newmsg2 -> value = opponentchoice;
+						newmsg2 -> value = msg -> value;
 						write(con -> toPlayer1, newmsg, sizeof(struct message));
 						write(con -> toPlayer2, newmsg2, sizeof(struct message));
 
@@ -383,12 +386,12 @@ int main(){
 						newmsg3 -> setindexopponent = -1;
 						//msg to other player
 						struct message* newmsg4 = malloc(sizeof(struct message));
-						newmsg4 -> value = opponentchoice;
+						newmsg4 -> value = msg -> value;
 						strcpy(newmsg4 -> servermsg, "pass");
 						write(con -> toPlayer1, newmsg3, sizeof(struct message));
 						write(con -> toPlayer2, newmsg4, sizeof(struct message));
 						char* loghistory = malloc(256);
-						int bytes = sprintf(loghistory, "Player %d chose: %d \n", con -> fromPlayer2, opponentchoice);
+						int bytes = sprintf(loghistory, "Player %d chose: %d \n", con -> fromPlayer2, msg -> value);
 						write(history, loghistory, bytes);
 
 						
@@ -431,6 +434,7 @@ static int returnplayer1choice(int player1choice){
 	static int Player1Choice = -1;
 	if(player1choice != -1){
 	Player1Choice = player1choice;
+	printf("PLAY1 SET: %d \n", Player1Choice);
 	}
 	
 	return Player1Choice;
