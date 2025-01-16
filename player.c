@@ -13,6 +13,7 @@ int main(){
 	printf("Waiting for server... \n");
 	while(1){
 		//read until msg says "pass"
+		
 		struct message* msg = malloc(sizeof(struct message));
 		int bytes = read(toPlayer, msg, sizeof(struct message));
 		if(bytes <= 0){
@@ -34,7 +35,7 @@ int main(){
 
 
 		}
-		if(strcmp(msg -> servermsg, "pass") == 0 || waiting){
+		if(strcmp(msg -> servermsg, "pass") == 0){
 			
 			printf("Waiting for opponent... \n");
 		}
@@ -144,6 +145,7 @@ int main(){
 			}
 			printf("Player Won! \n");
 			printf("Opponent chose %s \n", strchoice);
+			printf("Waiting for new opponent... \n");
 			waiting = 1;
 
 		}
