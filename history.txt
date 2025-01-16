@@ -1,5 +1,29 @@
-Player 4 chose: 1 
-Player 6 chose: 1 
 Player 4 chose: 2 
-Player 4 chose: 2 
-Player 4 won 
+Player 18 chose: 2 
+Player 4 chose: 3 
+Player 18 chose: 1 
+Player 18 won 
+Player 10 chose: 1 
+Player 12 chose: 1 
+Player 10 chose: 2 
+Player 10 chose: 2 
+Player 10 won 
+Player 10 chose: 2 
+Player 18 chose: 2 
+Player 10 chose: 3 
+Player 18 chose: 1 
+Player 18 won 
+Player 6 chose: 3 
+Player 16 chose: 3 
+Player 6 chose: 2 
+Player 6 chose: 2 
+Player 6 won 
+Player 6 chose: 2 
+Player 18 chose: 3 
+Player 18 won 
+Player 8 chose: 2 
+Player 14 chose: 3 
+Player 14 won 
+Player 14 chose: 2 
+Player 18 chose: 3 
+Player 18 won the tournament!!! 

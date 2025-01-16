@@ -74,7 +74,7 @@ int main(){
   			
  
 			newmsg -> value = choice;
-			
+			printf("GO2 SENT TO SERVER: %d \n", newmsg -> value);
 			write(fromPlayer, newmsg, sizeof(struct message));
 			waiting = 0;
 		}

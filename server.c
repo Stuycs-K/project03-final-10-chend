@@ -250,11 +250,13 @@ int main(){
 
 						con -> toWinner = con -> toPlayer2;
 						con -> fromWinner = con -> fromPlayer2;
+						
 						//win
 						//tell player1 to exit(SIGINT)
 						//send "lose" to player1 & the choice opponent made(send choice from player2 to player1, player2 already knows since they decided who won)
 						//send "won" to player2
 						int opponentchoice = returnplayer1choice(-1);
+						printf("OPPONENTCHOICE: %d \n", opponentchoice);
 						if(lastmatch){
 								strcpy(newmsg -> servermsg, "wonall");
 								newmsg -> value = opponentchoice;
@@ -273,7 +275,7 @@ int main(){
 						}
 						else{
 							strcpy(newmsg -> servermsg, "won");
-							newmsg -> value = msg -> value;
+							newmsg -> value = opponentchoice;
 
 
 
@@ -294,7 +296,9 @@ int main(){
 						newmsg2 -> value = msg -> value;
 
 						write(con -> toPlayer1, newmsg2, sizeof(struct message));
+						printf("SERVER SENT PLAYER1: %d \n", newmsg2 -> value);
 						write(con -> toPlayer2,	newmsg, sizeof(struct message));
+						printf("SERVER SENT PLAYER2: %d \n", newmsg -> value);
 						if(lastmatch){
 							sleep(1);
 							exit(1);
@@ -320,7 +324,7 @@ int main(){
 
 
 								char* loghistory = malloc(256);
-								int bytes = sprintf(loghistory, "Player %d chose: %d \n", con -> fromPlayer1, opponentchoice);
+								int bytes = sprintf(loghistory, "Player %d chose: %d \n", con -> fromPlayer2, msg -> value);
 								write(history, loghistory, bytes);
 
 								char* result = malloc(256);
@@ -336,7 +340,7 @@ int main(){
 
 
 							char* loghistory = malloc(256);
-							int bytes = sprintf(loghistory, "Player %d chose: %d \n", con -> fromPlayer1, opponentchoice);
+							int bytes = sprintf(loghistory, "Player %d chose: %d \n", con -> fromPlayer2, msg -> value);
 							write(history, loghistory, bytes);
 
 							char* result = malloc(256);
