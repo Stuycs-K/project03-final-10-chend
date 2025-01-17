@@ -1,0 +1,3 @@
+Player 4 chose: 3 
+Player 18 disconnected 
+Player 6 disconnected 

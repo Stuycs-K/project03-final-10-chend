@@ -214,12 +214,13 @@ static void quit(int signum){
 	int index = returnindex(0);
 	int fromPlayer = returnfromPlayer(0);
 	printf("Player Exiting... \n");
-	sleep(1);
-	//send QUIT to server(preventing broken pipe error)
 	struct message* msg = malloc(sizeof(struct message));
 	strcpy(msg -> servermsg, "QUIT");
 	msg -> setindex = index;
 	write(fromPlayer, msg, sizeof(struct message));	
+	sleep(1);
+	//send QUIT to server(preventing broken pipe error)
+	
 	sleep(1.6);
 	exit(1);
 

@@ -257,12 +257,36 @@ int main(){
 					int bytes = read(con -> fromPlayer2, msg, sizeof(struct message));
 					if(bytes <= 0){
 						FD_CLR(con -> fromPlayer2, &listofconnections);
-						printf("DISCONNECT \n");
+						//printf("DISCONNECT \n");
 						continue;
 					}
 					struct message* newmsg = malloc(sizeof(struct message));
 					//msg to other player
 					struct message* newmsg2 = malloc(sizeof(struct message));
+					if(strcmp(msg -> servermsg, "QUIT") == 0){
+						
+						//remember to write to file "player... disconnected"
+						//send 1000 to player1
+						//for player2 send server "lose"
+						//newmsg for player2
+						newmsg -> value = 1000;
+						strcpy(newmsg -> servermsg, "won");
+						write(con -> toPlayer1, newmsg, sizeof(struct message));
+						//set toWinner and toPlayer here
+						char* loghistory = malloc(256);
+						int bytes = sprintf(loghistory, "Player %d disconnected \n", con -> fromPlayer2);
+						con -> fromPlayer2 = -1;
+						con -> toPlayer2 = -1;
+						con -> toWinner = con -> toPlayer1;
+						con -> fromWinner = con -> fromPlayer1;
+						
+						write(history, loghistory, bytes);
+						
+						sleep(1);
+						
+						continue;
+
+					}
 					if(strcmp(msg -> servermsg, "won") == 0){
 						//SET WINNER HERE
 
@@ -324,30 +348,7 @@ int main(){
 
 					}
 						
-					else if(strcmp(msg -> servermsg, "QUIT") == 0){
-						
-						//remember to write to file "player... disconnected"
-						//send 1000 to player1
-						//for player2 send server "lose"
-						//newmsg for player2
-						newmsg -> value = 1000;
-						strcpy(newmsg -> servermsg, "won");
-						write(con -> toPlayer1, newmsg, sizeof(struct message));
-						//set toWinner and toPlayer here
-						char* loghistory = malloc(256);
-						int bytes = sprintf(loghistory, "Player %d disconnected \n", con -> fromPlayer2);
-						con -> fromPlayer2 = -1;
-						con -> toPlayer2 = -1;
-						con -> toWinner = con -> toPlayer1;
-						con -> fromWinner = con -> fromPlayer1;
-						
-						write(history, loghistory, bytes);
-
-						sleep(1);
-						
-						continue;
-
-					}
+					
 					}
 					else if(strcmp(msg -> servermsg, "lose") == 0){
 						con -> toWinner = con -> toPlayer1;
