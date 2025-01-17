@@ -1,9 +1,0 @@
-Player 4 disconnectedPlayer 8 chose: 2 
-Player 16 chose: 1000 
-Player 8 chose: 1 
-Player 16 chose: 1000 
-Player 8 won 
-Player 8 chose: 3 
-Player 14 chose: 1000 
-Player 14 won 
-Player 6 chose: 2 

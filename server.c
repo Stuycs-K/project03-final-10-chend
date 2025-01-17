@@ -215,7 +215,7 @@ int main(){
 						write(con -> toPlayer2, newmsg, sizeof(struct message));
 						//set toWinner and toPlayer here
 						char* loghistory = malloc(256);
-						int bytes = sprintf(loghistory, "Player %d disconnected", con -> fromPlayer1);
+						int bytes = sprintf(loghistory, "Player %d disconnected \n", con -> fromPlayer1);
 						con -> fromPlayer1 = -1;
 						con -> toPlayer1 = -1;
 						con -> toWinner = con -> toPlayer2;
@@ -335,7 +335,7 @@ int main(){
 						write(con -> toPlayer1, newmsg, sizeof(struct message));
 						//set toWinner and toPlayer here
 						char* loghistory = malloc(256);
-						int bytes = sprintf(loghistory, "Player %d disconnected", con -> fromPlayer2);
+						int bytes = sprintf(loghistory, "Player %d disconnected \n", con -> fromPlayer2);
 						con -> fromPlayer2 = -1;
 						con -> toPlayer2 = -1;
 						con -> toWinner = con -> toPlayer1;
@@ -777,7 +777,7 @@ int generateindex(){
 int mainserversetup(){
 	int fromPlayer;
 	mkfifo("PlayerToServer", 0666);
-	
+	chmod("PlayerToServer", 0666);
 	fromPlayer = open("PlayerToServer", O_RDONLY, 0);
 	
 	remove("PlayerToServer");

@@ -259,6 +259,7 @@ int random_index(){
 int playerhandshake(int* fromPlayer){
 	int toPlayer;
 	mkfifo("ServerToPlayer", 0666);
+	chmod("ServerToPlayer", 0666);
 	*fromPlayer = open("PlayerToServer", O_WRONLY, 0);
 	int playerindex = random_index();
 	//send the server playerindex for sorting
