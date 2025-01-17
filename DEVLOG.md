@@ -68,3 +68,6 @@ Finished Tournament - 40 min
 Fixing up minor bugs - 10 min
 Fixing up play history bugs - 10 min
 
+### 2024-01-16 - Fixed Bugs And Starting To Finish Up
+Fixed bugs regarding server messages and writing - 50 min
+Started to write code for handling player leaving(works for player1 but not player2) - 30 min

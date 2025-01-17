@@ -197,16 +197,44 @@ int main(){
 					
 
 
-				
-					returnplayer1choice(msg -> value);
 					
+					returnplayer1choice(msg -> value);
+
+
+
+
+					//handle disconnects during gametime
+					if(strcmp(msg -> servermsg, "QUIT") == 0){
+						
+						//remember to write to file "player... disconnected"
+						//send 1000 to player2
+						//for player2 send server "lose"
+						//newmsg for player2
+						newmsg -> value = 1000;
+						strcpy(newmsg -> servermsg, "won");
+						write(con -> toPlayer2, newmsg, sizeof(struct message));
+						//set toWinner and toPlayer here
+						char* loghistory = malloc(256);
+						int bytes = sprintf(loghistory, "Player %d disconnected", con -> fromPlayer1);
+						con -> fromPlayer1 = -1;
+						con -> toPlayer1 = -1;
+						con -> toWinner = con -> toPlayer2;
+						con -> fromWinner = con -> fromPlayer2;
+					
+						write(history, loghistory, bytes);
+
+						sleep(1);
+						
+						continue;
+
+					}
 						
 					if(strcmp(msg -> servermsg, "go2") == 0){
-						printf("GOOOOOOOOOO2 \n");
+						
 						strcpy(newmsg -> servermsg, "go2");
 						newmsg -> value = msg -> value;
 						//BUG MIGHT HAPPEN HERE
-						printf("OpponentVal: %d \n", msg -> value);
+						
 
 						write(con -> toPlayer2, newmsg, sizeof(struct message));
 						
@@ -222,16 +250,7 @@ int main(){
 
 					
 
-					//handle disconnects during gametime
-					if(strcmp(msg -> servermsg, "QUIT") == 0){
-						
-						//remember to write to file "player... disconnected"
-						//send 1000 to player2
-						//for player2 send server "lose" and quit
-						
-						
-
-					}
+					
 				
 				}
 				else if(FD_ISSET(con -> fromPlayer2, &listofconnections)){
@@ -256,7 +275,7 @@ int main(){
 						//send "lose" to player1 & the choice opponent made(send choice from player2 to player1, player2 already knows since they decided who won)
 						//send "won" to player2
 						int opponentchoice = returnplayer1choice(-1);
-						printf("OPPONENTCHOICE: %d \n", opponentchoice);
+						
 						if(lastmatch){
 								strcpy(newmsg -> servermsg, "wonall");
 								newmsg -> value = opponentchoice;
@@ -305,7 +324,30 @@ int main(){
 
 					}
 						
+					else if(strcmp(msg -> servermsg, "QUIT") == 0){
+						
+						//remember to write to file "player... disconnected"
+						//send 1000 to player1
+						//for player2 send server "lose"
+						//newmsg for player2
+						newmsg -> value = 1000;
+						strcpy(newmsg -> servermsg, "won");
+						write(con -> toPlayer1, newmsg, sizeof(struct message));
+						//set toWinner and toPlayer here
+						char* loghistory = malloc(256);
+						int bytes = sprintf(loghistory, "Player %d disconnected", con -> fromPlayer2);
+						con -> fromPlayer2 = -1;
+						con -> toPlayer2 = -1;
+						con -> toWinner = con -> toPlayer1;
+						con -> fromWinner = con -> fromPlayer1;
+						
+						write(history, loghistory, bytes);
 
+						sleep(1);
+						
+						continue;
+
+					}
 					}
 					else if(strcmp(msg -> servermsg, "lose") == 0){
 						con -> toWinner = con -> toPlayer1;

@@ -53,7 +53,7 @@ int main(){
 			}
 		
 			//WHO WON HERE
-			if((choice == 1 && msg -> value == 3) || (choice == 2 && msg -> value == 1) || (choice == 3 && msg -> value == 2)){
+			if(msg -> value == 1000 || (choice == 1 && msg -> value == 3) || (choice == 2 && msg -> value == 1) || (choice == 3 && msg -> value == 2)){
 				//win
 				
 				strcpy(newmsg -> servermsg, "won");
@@ -75,7 +75,10 @@ int main(){
   			
  
 			newmsg -> value = choice;
-			printf("GO2 SENT TO SERVER: %d \n", newmsg -> value);
+			if(msg -> value = 1000){
+				newmsg -> value = 1000;
+
+			}
 			write(fromPlayer, newmsg, sizeof(struct message));
 			waiting = 0;
 		}
@@ -132,6 +135,7 @@ int main(){
 		else if(strcmp(msg -> servermsg, "won") == 0){
 			int choice = msg -> value;
 			char* strchoice = malloc(256);
+			
 			if(choice == 1){
 				strcpy(strchoice, "rock");
 			}
@@ -143,8 +147,15 @@ int main(){
 
 				strcpy(strchoice, "scissors");
 			}
+		
 			printf("Player Won! \n");
-			printf("Opponent chose %s \n", strchoice);
+			if(choice == 1000){
+
+				printf("Opponent disconnected \n");
+			}
+			else{
+				printf("Opponent chose %s \n", strchoice);
+			}
 			printf("Waiting for new opponent... \n");
 			waiting = 1;
 
@@ -205,10 +216,11 @@ static void quit(int signum){
 	printf("Player Exiting... \n");
 	sleep(1);
 	//send QUIT to server(preventing broken pipe error)
-	//struct message* msg = malloc(sizeof(struct message));
-	//strcpy(msg -> servermsg, "QUIT");
-	//msg -> setindex = index;
-	//write(fromPlayer, msg, sizeof(struct message);
+	struct message* msg = malloc(sizeof(struct message));
+	strcpy(msg -> servermsg, "QUIT");
+	msg -> setindex = index;
+	write(fromPlayer, msg, sizeof(struct message));	
+	sleep(1.6);
 	exit(1);
 
 }
