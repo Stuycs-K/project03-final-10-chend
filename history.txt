@@ -1,3 +1,20 @@
-Player 4 chose: 3 
-Player 18 disconnected 
-Player 6 disconnected 
+Player 220 chose: 3 
+Player 90 chose: 3 
+Player 220 chose: 2 
+Player 90 chose: 3 
+Player 90 won 
+Player 423 chose: 3 
+Player 321 disconnected 
+Player 90 disconnected 
+Player 620 chose: 2 
+Player 669 chose: 3 
+Player 669 won 
+Player 423 chose: 3 
+Player 423 chose: 3 
+Player 669 chose: 2 
+Player 423 won 
+Player 944 chose: 2 
+Player 691 chose: 3 
+Player 691 won 
+Player 423 disconnected 
+Player 691 won the tournament!!! 

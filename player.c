@@ -75,7 +75,7 @@ int main(){
   			
  
 			newmsg -> value = choice;
-			if(msg -> value = 1000){
+			if(msg -> value == 1000){
 				newmsg -> value = 1000;
 
 			}
@@ -129,7 +129,14 @@ int main(){
 				strcpy(strchoice, "scissors");
 			}
 			printf("Player Won The Tournament! \n");
+			if(choice == 1000){
+
+				printf("Opponent disconnected \n");
+			}
+			
+			else{
 			printf("Opponent chose %s \n", strchoice);
+			}
 			quit(1);
 		}
 		else if(strcmp(msg -> servermsg, "won") == 0){

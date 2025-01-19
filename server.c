@@ -78,7 +78,7 @@ int main(){
 
 
 					write(con -> toPlayer2, proceed2, sizeof(struct message));
-					sleep(1);
+					sleep(0.15);
 					//TO SEND ANOTHER MESSAGE
 
 						
@@ -191,7 +191,7 @@ int main(){
 
 					if(msg -> value == 1 || msg -> value == 2 || msg -> value == 3){
 					char* loghistory = malloc(256);
-					int bytes2 = sprintf(loghistory, "Player %d chose: %d \n", con -> fromPlayer1, msg -> value);
+					int bytes2 = sprintf(loghistory, "Player %d chose: %d \n", con -> indexPlayer1, msg -> value);
 					write(history, loghistory, bytes2);
 					}
 					
@@ -211,17 +211,39 @@ int main(){
 						//for player2 send server "lose"
 						//newmsg for player2
 						newmsg -> value = 1000;
-						strcpy(newmsg -> servermsg, "won");
-						write(con -> toPlayer2, newmsg, sizeof(struct message));
-						//set toWinner and toPlayer here
+
+
 						char* loghistory = malloc(256);
-						int bytes = sprintf(loghistory, "Player %d disconnected \n", con -> fromPlayer1);
+						int bytes = sprintf(loghistory, "Player %d disconnected \n", con -> indexPlayer1);
+						write(history, loghistory, bytes);
+		
+						//check if last match
+						if(lastmatch){
+
+							
+							strcpy(newmsg -> servermsg, "wonall");
+							char* result = malloc(256);
+							bytes = sprintf(result, "Player %d won the tournament!!! \n", con -> indexPlayer2);
+							write(history, result, bytes);
+							write(con -> toPlayer2, newmsg, sizeof(struct message));
+							sleep(1);
+							exit(0);
+
+						}
+						else{
+							strcpy(newmsg -> servermsg, "won");
+
+						}
+						
+						
+						//set toWinner and toPlayer here
+						
 						con -> fromPlayer1 = -1;
 						con -> toPlayer1 = -1;
 						con -> toWinner = con -> toPlayer2;
 						con -> fromWinner = con -> fromPlayer2;
-					
-						write(history, loghistory, bytes);
+						write(con -> toPlayer2, newmsg, sizeof(struct message));
+							
 
 						sleep(1);
 						
@@ -270,18 +292,40 @@ int main(){
 						//for player2 send server "lose"
 						//newmsg for player2
 						newmsg -> value = 1000;
-						strcpy(newmsg -> servermsg, "won");
-						write(con -> toPlayer1, newmsg, sizeof(struct message));
+						
+						
+						
+					
 						//set toWinner and toPlayer here
 						char* loghistory = malloc(256);
-						int bytes = sprintf(loghistory, "Player %d disconnected \n", con -> fromPlayer2);
+						int bytes = sprintf(loghistory, "Player %d disconnected \n", con -> indexPlayer2);
+						write(history, loghistory, bytes);
+
+
+						//check if last match
+						if(lastmatch){
+
+							
+							strcpy(newmsg -> servermsg, "wonall");
+							char* result = malloc(256);
+							bytes = sprintf(result, "Player %d won the tournament!!! \n", con -> indexPlayer1);
+							write(history, result, bytes);
+							write(con -> toPlayer1, newmsg, sizeof(struct message));
+							sleep(1);
+							exit(0);
+
+						}
+						else{
+							strcpy(newmsg -> servermsg, "won");
+
+						}
+						write(con -> toPlayer1, newmsg, sizeof(struct message));
 						con -> fromPlayer2 = -1;
 						con -> toPlayer2 = -1;
 						con -> toWinner = con -> toPlayer1;
 						con -> fromWinner = con -> fromPlayer1;
 						
-						write(history, loghistory, bytes);
-						
+												
 						sleep(1);
 						
 						continue;
@@ -307,11 +351,11 @@ int main(){
 
 
 								char* loghistory = malloc(256);
-								int bytes = sprintf(loghistory, "Player %d chose: %d \n", con -> fromPlayer2, msg -> value);
+								int bytes = sprintf(loghistory, "Player %d chose: %d \n", con -> indexPlayer2, msg -> value);
 								write(history, loghistory, bytes);
 
 								char* result = malloc(256);
-								bytes = sprintf(result, "Player %d won the tournament!!! \n", con -> fromPlayer2);
+								bytes = sprintf(result, "Player %d won the tournament!!! \n", con -> indexPlayer2);
 								write(history, result, bytes);
 
 	
@@ -323,11 +367,11 @@ int main(){
 
 
 							char* loghistory = malloc(256);
-							int bytes = sprintf(loghistory, "Player %d chose: %d \n", con -> fromPlayer2, msg -> value);
+							int bytes = sprintf(loghistory, "Player %d chose: %d \n", con -> indexPlayer2, msg -> value);
 							write(history, loghistory, bytes);
 
 							char* result = malloc(256);
-							bytes = sprintf(result, "Player %d won \n", con -> fromPlayer2);
+							bytes = sprintf(result, "Player %d won \n", con -> indexPlayer2);
 							write(history, result, bytes);
 
 
@@ -367,11 +411,11 @@ int main(){
 
 
 								char* loghistory = malloc(256);
-								int bytes = sprintf(loghistory, "Player %d chose: %d \n", con -> fromPlayer2, msg -> value);
+								int bytes = sprintf(loghistory, "Player %d chose: %d \n", con -> indexPlayer2, msg -> value);
 								write(history, loghistory, bytes);
 
 								char* result = malloc(256);
-								bytes = sprintf(result, "Player %d won the tournament!!! \n", con -> fromPlayer1);
+								bytes = sprintf(result, "Player %d won the tournament!!! \n", con -> indexPlayer1);
 								write(history, result, bytes);
 
 	
@@ -383,11 +427,11 @@ int main(){
 
 
 							char* loghistory = malloc(256);
-							int bytes = sprintf(loghistory, "Player %d chose: %d \n", con -> fromPlayer2, msg -> value);
+							int bytes = sprintf(loghistory, "Player %d chose: %d \n", con -> indexPlayer2, msg -> value);
 							write(history, loghistory, bytes);
 
 							char* result = malloc(256);
-							bytes = sprintf(result, "Player %d won \n", con -> fromPlayer1);
+							bytes = sprintf(result, "Player %d won \n", con -> indexPlayer1);
 							write(history, result, bytes);
 
 
@@ -441,7 +485,7 @@ int main(){
 						write(con -> toPlayer1, newmsg3, sizeof(struct message));
 						write(con -> toPlayer2, newmsg4, sizeof(struct message));
 						char* loghistory = malloc(256);
-						int bytes = sprintf(loghistory, "Player %d chose: %d \n", con -> fromPlayer2, msg -> value);
+						int bytes = sprintf(loghistory, "Player %d chose: %d \n", con -> indexPlayer2, msg -> value);
 						write(history, loghistory, bytes);
 
 						
