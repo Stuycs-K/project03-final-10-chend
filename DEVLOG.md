@@ -76,3 +76,10 @@ Started to write code for handling player leaving(works for player1 but not play
 ### 2024-01-17 - Testing And Fixed Handling Player2
 Fixed leaving for player2 - 20 min
 Tested code works for multiplayer - 50 min
+
+### 2024-01-18 - Finishing Touches(Part One)
+Fixed issues with not being able to disconnect during last game - 30 min
+Finished up print statements - 20 min
+Finished up file writing - 10 min
+
+

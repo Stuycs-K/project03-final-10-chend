@@ -16,7 +16,7 @@ int main(){
 
 	
 	int history = open("history.txt", O_RDWR | O_APPEND | O_TRUNC , 0666);
-	
+	int history2 = open("history.txt", O_RDONLY, 0);
 	struct connection** listofconnections2 = malloc(sizeof(struct connection) * 4);
 	for(int i = 0; i < 4; i ++){
 			struct connection* con = malloc(sizeof(struct connection));
@@ -182,7 +182,7 @@ int main(){
 					if(bytes <= 0){
 						//disconnected
 						FD_CLR(con -> fromPlayer1, &listofconnections);
-						printf("DISCONNECT \n");
+						
 						continue;
 					}
 
@@ -383,9 +383,9 @@ int main(){
 						newmsg2 -> value = msg -> value;
 
 						write(con -> toPlayer1, newmsg2, sizeof(struct message));
-						printf("SERVER SENT PLAYER1: %d \n", newmsg2 -> value);
+					
 						write(con -> toPlayer2,	newmsg, sizeof(struct message));
-						printf("SERVER SENT PLAYER2: %d \n", newmsg -> value);
+						
 						if(lastmatch){
 							sleep(1);
 							exit(1);
@@ -503,9 +503,16 @@ int main(){
 			}
 			//zero out 
 			FD_ZERO(&listofconnections);
+			//read History
+			
+
+
+
 			sleep(0.5);
-			//if so, get the message from that desc to the player its playing against
-			//write to the opponent using 
+			char* historybuff = malloc(256);
+			read(history2, historybuff, 255);
+			printf("%s \n", historybuff);
+			
 		}
 		
 		
@@ -528,8 +535,7 @@ static int returnplayer1choice(int player1choice){
 	static int Player1Choice = -1;
 	if(player1choice != -1){
 	Player1Choice = player1choice;
-	printf("PLAY1 SET: %d \n", Player1Choice);
-	}
+		}
 	
 	return Player1Choice;
 	
@@ -812,7 +818,7 @@ int generateindex(){
 		randomIndex *= -1;
 
 	}
-	printf("Generated Player Index: %d \n", randomIndex);
+	
 	randomIndex %= 1001;
 	return randomIndex;
 	//always positive, between 0 and 1000
