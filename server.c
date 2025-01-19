@@ -8,7 +8,7 @@ int main(){
 	int numplayers = 8;
 	int curplayers = 0;
 	int unsorted = 1;
-
+	
 	signal(SIGPIPE, ignore_SIGPIPE);
 	
 	
@@ -27,7 +27,12 @@ int main(){
 			listofconnections2[i] = con;
 	}
 	while(1){
+
 		if(curplayers < numplayers){
+			fd_set waitingconnections;
+			FD_ZERO(&waitingconnections);
+	
+
 			int toPlayer;
 			int fromPlayer;
 			printf("Waiting for %d players... \n", numplayers - curplayers);
@@ -40,27 +45,131 @@ int main(){
 				if(con -> fromPlayer1 == -1){
 					con -> fromPlayer1 = fromPlayer;
 					con -> toPlayer1 = toPlayer;
+					con -> init1 = -1;
+					curplayers ++;
 					break;
 				}
 				else if(con -> fromPlayer2 == -1){
 					con -> fromPlayer2 = fromPlayer;
 					con -> toPlayer2 = toPlayer;
+					con -> init2 = -1;
+					curplayers ++;
 					break;
 
 				}
 				
 
 			}
-			curplayers ++;
+
+			int max = -1;
+			for(int i = 0; i < 4; i ++){
+				struct connection* con = listofconnections2[i];
+				if(con -> fromPlayer1 != -1){
+					FD_SET(con -> fromPlayer1, &waitingconnections);
+					if(con -> fromPlayer1 > max){
+						
+						max = con -> fromPlayer1;
+					}
+					int unsent = 1;
+
+					//check if uninititalized
+
+
+					if(con -> init1 == -1){
+					struct message* msg = malloc(sizeof(struct message));
+					strcpy(msg -> servermsg, "less");
+					
+					write(con -> toPlayer1, msg, sizeof(struct message));
+					con -> init1 = 1;
+					}
+				}
+				if(con -> fromPlayer2 != -1){
+					FD_SET(con -> fromPlayer2, &waitingconnections);
+					if(con -> fromPlayer2 > max){
+
+						max = con -> fromPlayer2;
+					}
+					int unsent = 1;
+
+
+					if(con -> init2 == -1){
+					struct message* msg = malloc(sizeof(struct message));
+					strcpy(msg -> servermsg, "less");
+					write(con -> toPlayer2, msg, sizeof(struct message));
+					con -> init2 = 1;
+					}
+				}
+
+			}
+			max += 1;
+			select(max, &waitingconnections, NULL, NULL, NULL);
+
+			//FD isset and check if the message is QUIT
+			for(int i = 0; i < 4; i ++){
+				struct connection* con = listofconnections2[i];
+				if(FD_ISSET(con -> fromPlayer1, &waitingconnections)){
+					struct message* msg = malloc(sizeof(struct message));
+					read(con -> fromPlayer1, msg, sizeof(struct message));
+					
+					if(strcmp(msg -> servermsg, "QUIT") == 0){
+						
+						curplayers -= 1;
+						con -> fromPlayer1 = -1;
+						con -> toPlayer1 = -1;
+					}
+				}
+
+
+
+				if(FD_ISSET(con -> fromPlayer2, &waitingconnections)){
+					struct message* msg = malloc(sizeof(struct message));
+					read(con -> fromPlayer2, msg, sizeof(struct message));
+					
+					if(strcmp(msg -> servermsg, "QUIT") == 0){
+						curplayers -= 1;
+						con -> fromPlayer2 = -1;
+						con -> toPlayer2 = -1;
+
+					}
+				}
+
+			}
+
+
+
+			
 			
 		}
 		else{
 			fd_set listofconnections;
+			
 			if(unsorted){
 				
+				//send ready to all connections
+
+				for(int i = 0; i < 4; i ++){
+					struct connection* con = listofconnections2[i];
+
+
+					struct message* msg1 = malloc(sizeof(struct message));
+					struct message* msg2 = malloc(sizeof(struct message));
+					strcpy(msg1 -> servermsg, "ready");
+					strcpy(msg2 -> servermsg, "ready");
+					write(con -> toPlayer1, msg1, sizeof(struct message));
+					write(con -> toPlayer2, msg2, sizeof(struct message));
+					
+					
+
+				}
+
 				listofconnections2 = sortconnections(listofconnections2);
 				for(int i = 0; i < 4; i ++){
 					struct connection* con = listofconnections2[i];
+					
+
+
+
+
 
 					struct message* proceed = malloc(sizeof(struct message));
 					strcpy(proceed -> servermsg, "go1");
@@ -139,7 +248,7 @@ int main(){
 					
 					if(con -> fromPlayer1 > maxfile){
 						maxfile = con-> fromPlayer1;
-
+						
 					}
 					
 					FD_SET(con -> fromPlayer1, &listofconnections);
@@ -148,7 +257,7 @@ int main(){
 					
 					if(con -> fromPlayer2 > maxfile){
 						maxfile = con-> fromPlayer2;
-
+						
 					}
 					FD_SET(con -> fromPlayer2, &listofconnections);
 				}	

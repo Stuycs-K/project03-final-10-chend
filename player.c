@@ -11,6 +11,37 @@ int main(){
 	returnfromPlayer(fromPlayer);
 	int waiting = 0;
 	printf("Waiting for server... \n");
+
+	while(1){
+
+		struct message* msg = malloc(sizeof(struct message));
+		int bytes = read(toPlayer, msg, sizeof(struct message));
+		
+		if(strcmp(msg -> servermsg, "less") == 0){
+			
+			//less than 8 players
+			//send msg(to unblock select)
+			struct message* msg2 = malloc(sizeof(struct message));
+			
+			strcpy(msg2 -> servermsg, "online");
+			
+			write(fromPlayer, msg2, sizeof(struct message));
+			sleep(0.1);
+
+		}
+		if(strcmp(msg -> servermsg, "ready") == 0){
+			//break
+
+			
+			printf("Game Starting... \n");
+			break;
+
+		}
+
+	}
+
+
+
 	while(1){
 		//read until msg says "pass"
 		

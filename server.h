@@ -30,6 +30,8 @@ struct connection {
   int indexPlayer2;
   int toWinner;
   int fromWinner;
+  int init1;
+  int init2;
 
 };
 static int returnplayer1choice(int player1choice);
