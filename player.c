@@ -50,9 +50,9 @@ int main(){
 		if(bytes <= 0){
 
 			printf("Server Disconnected! \n");
-			exit(1);
+			exit(0);
 		}
-		printf("SERVER SENT MSG: %s \n", msg -> servermsg);
+		
 
 
 		if(strcmp(msg -> servermsg, "recieveindex") == 0){
@@ -260,7 +260,7 @@ static void quit(int signum){
 	//send QUIT to server(preventing broken pipe error)
 	
 	sleep(1.6);
-	exit(1);
+	exit(0);
 
 }
 

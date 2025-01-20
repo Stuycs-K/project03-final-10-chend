@@ -335,6 +335,7 @@ int main(){
 							bytes = sprintf(result, "Player %d won the tournament!!! \n", con -> indexPlayer2);
 							write(history, result, bytes);
 							write(con -> toPlayer2, newmsg, sizeof(struct message));
+							printf("%s", result);
 							sleep(1);
 							exit(0);
 
@@ -420,6 +421,7 @@ int main(){
 							bytes = sprintf(result, "Player %d won the tournament!!! \n", con -> indexPlayer1);
 							write(history, result, bytes);
 							write(con -> toPlayer1, newmsg, sizeof(struct message));
+							printf("%s", result);
 							sleep(1);
 							exit(0);
 
@@ -497,7 +499,7 @@ int main(){
 						
 						if(lastmatch){
 							sleep(1);
-							exit(1);
+							exit(0);
 
 					}
 						
@@ -557,7 +559,7 @@ int main(){
 						write(con -> toPlayer2, newmsg2, sizeof(struct message));
 						if(lastmatch){
 							sleep(1);
-							exit(1);
+							exit(0);
 
 						}
 						

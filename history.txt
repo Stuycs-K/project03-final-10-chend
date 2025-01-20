@@ -1,21 +1,19 @@
-Player 271 chose: 3 
-Player 370 disconnected 
-Player 610 chose: 2 
-Player 795 chose: 3 
-Player 795 won 
-Player 271 chose: 3 
-Player 795 chose: 3 
-Player 271 chose: 1 
-Player 795 chose: 2 
-Player 795 won 
-Player 63 chose: 3 
-Player 104 chose: 3 
-Player 63 chose: 2 
-Player 104 chose: 1 
-Player 63 won 
-Player 868 chose: 3 
-Player 833 chose: 2 
-Player 868 won 
-Player 63 disconnected 
-Player 868 disconnected 
-Player 795 won the tournament!!! 
+Player 471 chose: 1 
+Player 314 chose: 1 
+Player 471 chose: 2 
+Player 314 chose: 1 
+Player 471 won 
+Player 55 chose: 3 
+Player 234 chose: 2 
+Player 93 disconnected 
+Player 55 disconnected 
+Player 716 chose: 2 
+Player 874 chose: 1 
+Player 716 won 
+Player 716 chose: 2 
+Player 259 chose: 1 
+Player 234 won 
+Player 471 disconnected 
+Player 716 chose: 2 
+Player 234 disconnected 
+Player 716 won the tournament!!! 
