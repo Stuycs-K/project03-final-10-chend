@@ -8,16 +8,20 @@ int main(){
 	int numplayers = 8;
 	int curplayers = 0;
 	int unsorted = 1;
-	
+	//ignore sigpipe
 	signal(SIGPIPE, ignore_SIGPIPE);
 	
 	
 	
 
-	
+	//for writing
 	int history = open("history.txt", O_RDWR | O_APPEND | O_TRUNC , 0666);
+	//for printing in terminal
 	int history2 = open("history.txt", O_RDONLY, 0);
 	struct connection** listofconnections2 = malloc(sizeof(struct connection) * 4);
+
+
+	//set up connections
 	for(int i = 0; i < 4; i ++){
 			struct connection* con = malloc(sizeof(struct connection));
 			con -> toPlayer1 = -1;
@@ -31,11 +35,12 @@ int main(){
 		if(curplayers < numplayers){
 			fd_set waitingconnections;
 			FD_ZERO(&waitingconnections);
-	
+			
 
 			int toPlayer;
 			int fromPlayer;
 			printf("Waiting for %d players... \n", numplayers - curplayers);
+			//handshake
 			fromPlayer = mainserversetup();
 			toPlayer = serverconnect(&fromPlayer);
 			
@@ -62,6 +67,11 @@ int main(){
 			}
 
 			int max = -1;
+
+
+
+			//set up select for early player management
+
 			for(int i = 0; i < 4; i ++){
 				struct connection* con = listofconnections2[i];
 				if(con -> fromPlayer1 != -1){
@@ -70,9 +80,9 @@ int main(){
 						
 						max = con -> fromPlayer1;
 					}
-					int unsent = 1;
+					
 
-					//check if uninititalized
+					
 
 
 					if(con -> init1 == -1){
@@ -89,7 +99,7 @@ int main(){
 
 						max = con -> fromPlayer2;
 					}
-					int unsent = 1;
+					
 
 
 					if(con -> init2 == -1){
@@ -104,7 +114,7 @@ int main(){
 			max += 1;
 			select(max, &waitingconnections, NULL, NULL, NULL);
 
-			//FD isset and check if the message is QUIT
+			//FD isset and check if the message is QUIT(player disconnected)
 			for(int i = 0; i < 4; i ++){
 				struct connection* con = listofconnections2[i];
 				if(FD_ISSET(con -> fromPlayer1, &waitingconnections)){
@@ -145,7 +155,7 @@ int main(){
 			
 			if(unsorted){
 				
-				//send ready to all connections
+				//send ready to all connections to initialize
 
 				for(int i = 0; i < 4; i ++){
 					struct connection* con = listofconnections2[i];
@@ -162,7 +172,12 @@ int main(){
 
 				}
 
+				//random matchmaking
 				listofconnections2 = sortconnections(listofconnections2);
+				
+
+
+				//initialize both players in all connections to start
 				for(int i = 0; i < 4; i ++){
 					struct connection* con = listofconnections2[i];
 					
@@ -204,14 +219,14 @@ int main(){
 			}
 			
 
-			//remake and check if resort did anything
+			
 	
 			
-
+			//if there are two winners, match them up
 			remakeconnections(listofconnections2);
 			int numplayers = 0;
 			int lastmatch = 0;
-			//check if server should send "wonall" and end tournament
+			
 			for(int i = 0; i < 4; i++){
 				struct connection* con = listofconnections2[i];
 				if(con -> fromPlayer1 != -1){
@@ -223,23 +238,23 @@ int main(){
 
 
 			}
+
+
+			//if there are only two players left, it is the last match
 			if(numplayers == 2){
 				lastmatch = 1;
 			}
 
 			
 
-			//sort listofconnections2
+		
 
-			//send this msg to any new players
-			//started game
-			//printf("Max number of players in tournament! \n");
-
+		
 			//max file desc
 			int maxfile = -1;
 			FD_ZERO(&listofconnections);
 			
-			//select file desc again
+			//add file descs to select again, check for max file desc
 			for(int i = 0; i < 4; i ++){
 				struct connection* con = listofconnections2[i];
 				if(con -> fromPlayer1 != -1 && con -> fromWinner == -1 && con -> toWinner == -1){
@@ -267,7 +282,7 @@ int main(){
 			maxfile += 1;
 			
 			
-			
+			//block until a player sends a message
 			if(select(maxfile, &listofconnections, NULL, NULL, NULL) < 0){
 				printf("SELECT ERROR! \n");
 
@@ -377,7 +392,7 @@ int main(){
 					}
 					
 					//SECOND PLAYER WILL DECIDE WHO WINS, SENDS SERVER RESULT
-					//else for exit
+					
 
 
 					
@@ -397,16 +412,16 @@ int main(){
 					struct message* newmsg2 = malloc(sizeof(struct message));
 					if(strcmp(msg -> servermsg, "QUIT") == 0){
 						
-						//remember to write to file "player... disconnected"
-						//send 1000 to player1
+						
+						//send 1000 to player1(other player will treat that as a disconnection)
 						//for player2 send server "lose"
-						//newmsg for player2
+						
 						newmsg -> value = 1000;
 						
 						
 						
 					
-						//set toWinner and toPlayer here
+						
 						char* loghistory = malloc(256);
 						int bytes = sprintf(loghistory, "Player %d disconnected \n", con -> indexPlayer2);
 						write(history, loghistory, bytes);
@@ -511,7 +526,7 @@ int main(){
 
 						//lose
 						//tell player2 to exit(SIGINT)
-						//send "won" to player1 & the choice oppoennt made
+						//send "won" to player1 & the choice opponent made
 						//send "lose to player2
 						int opponentchoice = returnplayer1choice(-1);
 
@@ -604,7 +619,7 @@ int main(){
 						
 					}
 					
-					//wonall if player wins final match
+					
 
 
 
@@ -641,7 +656,7 @@ int main(){
 
 
 static int returnplayer1choice(int player1choice){
-	//int player1choice is either 1, 2, or 3(set value)
+	//keeps track of the choice player1 has made(since the value is stored in a struct that'll be sent to player2)
 	
 	static int Player1Choice = -1;
 	if(player1choice != -1){
@@ -656,6 +671,7 @@ static int returnplayer1choice(int player1choice){
 
 
 void printconnections(struct connection** listofconnections2){
+	//print all file descriptors and indices
 	for(int i = 0; i < 4; i ++){
 		
 		struct connection* con = listofconnections2[i];
@@ -674,7 +690,11 @@ void printconnections(struct connection** listofconnections2){
 
 
 int remakeconnections(struct connection** listofconnections2){
-	
+
+	//check if two players have won, matchmake them against each other if so(reset one connection to -1 and add the winner file descs to the other connection)
+
+
+
 	int resorted = 0;
 	for(int i = 0; i < 4; i ++){
 		struct connection* con = listofconnections2[i];
@@ -812,6 +832,12 @@ int remakeconnections(struct connection** listofconnections2){
 
 
 struct connection** sortconnections(struct connection** listofconnections2){
+
+
+	//generates indices for each player and sorts them with insertion sort, returns the sorted array for random matchmaking
+
+
+
 	int n = 0;
 	struct connection** newlistofconnections2 = malloc(sizeof(struct connection) * 4);
 	int* listofindices = malloc(sizeof(int) * 16);
@@ -898,7 +924,7 @@ struct connection** sortconnections(struct connection** listofconnections2){
 
 
 int* insertionsort(int* listofindices, int size){
-	
+	//sort the indices from least to greatest
 	for(int i = 1; i < size; i ++){
 		
 		for(int j = i; j >= 1; j --){
@@ -921,7 +947,7 @@ int* insertionsort(int* listofindices, int size){
 
 
 int generateindex(){
-
+	//generate a random index for a player
 	int randomIndex;
 	int randFile = open("/dev/random", O_RDONLY, 0);
 	read(randFile, &randomIndex, sizeof(int));
@@ -937,6 +963,8 @@ int generateindex(){
 }
 
 int mainserversetup(){
+
+	//create the file desc and wait for player response
 	int fromPlayer;
 	mkfifo("PlayerToServer", 0666);
 	chmod("PlayerToServer", 0666);
@@ -949,6 +977,7 @@ int mainserversetup(){
 
 
 int serverconnect(int* fromPlayer){
+	//other half of handshake(server response)
 	int playerindex;
 	read(*fromPlayer, &playerindex, sizeof(int));
 	//printf("SERVER RECIEVED INDEX: %d \n", playerindex);
@@ -965,6 +994,6 @@ int serverconnect(int* fromPlayer){
 static void ignore_SIGPIPE(int signum){
 	
 		
-
+	//ignore sigpipe error
 }
 

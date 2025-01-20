@@ -82,4 +82,9 @@ Fixed issues with not being able to disconnect during last game - 30 min
 Finished up print statements - 20 min
 Finished up file writing - 10 min
 
+### 2024-01-19 - Finished Print Statements And Comments For Server
+Finished polishing print statements - 30 min
+Added management of players before game starts - 30 min
+Added comments for server functions - 15 min
+
 
