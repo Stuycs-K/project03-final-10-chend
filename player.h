@@ -7,31 +7,24 @@
 #include <string.h>
 #include <errno.h>
 #include <signal.h>
-union semun {
-  int val;                  //used for SETVAL
-  struct semid_ds *buf;     //used for IPC_STAT and IPC_SET
-  unsigned short  *array;   //used for SETALL
-  struct seminfo  *__buf;
-};
 
-
-struct sembuf {
-  short sem_op;
-  short sem_num;
-  short sem_flag;
-};
 
 static void quit(int signum);
 struct message {
   int setindex; //index for player
   int setindexopponent; //index for opponent
   int value; //for rock paper scissors
-  char servermsg[256]; //pass means wait for players
-		   //go means ask for user input/player sent msg to server(go1/go2)
-		   //win means player won, wait for next 
+  char servermsg[256]; 
+ //pass means wait for players/opponent
+		   //go1 means ask for user input/player, send result to server(player1)
+		   //go2 means ask for user input/player, send result and who won to server(player2)
+		   //won means player won, wait for next 
+		   //wonall means player won the tournament, all players and server should quit
 		   //lose means player lost, SIGINT
 	           //draw, play against each other again
-		   //disconnect means player disconnected
+		   //QUIT means player disconnected
+
+		   
 };
 static int returnfromPlayer(int fromPlayer);
 static int returnindex(int index);

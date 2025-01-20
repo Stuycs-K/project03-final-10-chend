@@ -7,16 +7,23 @@ int main(){
 	int toPlayer;
 	int fromPlayer;
 	toPlayer = playerhandshake(&fromPlayer);
+
+	//before quitting, send a message to the server by calling quit()
 	signal(SIGINT, quit);
 	returnfromPlayer(fromPlayer);
 	int waiting = 0;
 	printf("Waiting for server... \n");
 
-	while(1){
+	while(1){ 
+		//wait for server to send "ready" once 8 players have joined
+		//send "online" to tell server to unblock
 
 		struct message* msg = malloc(sizeof(struct message));
 		int bytes = read(toPlayer, msg, sizeof(struct message));
-		
+		if(bytes <= 0){
+			printf("Server exited \n");
+			exit(0);
+		}
 		if(strcmp(msg -> servermsg, "less") == 0){
 			
 			//less than 8 players
@@ -43,10 +50,11 @@ int main(){
 
 
 	while(1){
-		//read until msg says "pass"
+		//game starts
 		
 		struct message* msg = malloc(sizeof(struct message));
 		int bytes = read(toPlayer, msg, sizeof(struct message));
+		//if no bytes were read, exit
 		if(bytes <= 0){
 
 			printf("Server Disconnected! \n");
@@ -54,7 +62,7 @@ int main(){
 		}
 		
 
-
+		
 		if(strcmp(msg -> servermsg, "recieveindex") == 0){
 			//for player2
 			//player1 got go
@@ -69,6 +77,11 @@ int main(){
 		if(strcmp(msg -> servermsg, "pass") == 0){
 			
 			printf("Waiting for opponent... \n");
+
+
+
+
+			
 		}
 		if(strcmp(msg -> servermsg, "go2") == 0){
 			//THIS PLAYER IS SECOND, CALCULATES WHO WON AND SENDS SERVER WINNER
@@ -80,7 +93,7 @@ int main(){
 				
 				fgets(linebuff, 255, stdin);
 				sscanf(linebuff, "%d", &choice);				
-				printf("CHOICE: %d \n", choice);
+				
 			}
 		
 			//WHO WON HERE
@@ -113,6 +126,7 @@ int main(){
 			write(fromPlayer, newmsg, sizeof(struct message));
 			waiting = 0;
 		}
+		//this player is first, asks for user input first and sends server msg
 		else if(strcmp(msg -> servermsg, "go1") == 0){
 
 			if(msg -> setindex >= 0 && msg -> setindexopponent >= 0){
@@ -248,7 +262,7 @@ int main(){
 
 
 static void quit(int signum){
-
+	
 	int index = returnindex(0);
 	int fromPlayer = returnfromPlayer(0);
 	printf("Player Exiting... \n");
@@ -257,7 +271,7 @@ static void quit(int signum){
 	msg -> setindex = index;
 	write(fromPlayer, msg, sizeof(struct message));	
 	sleep(1);
-	//send QUIT to server(preventing broken pipe error)
+	//send QUIT to server
 	
 	sleep(1.6);
 	exit(0);
@@ -265,6 +279,7 @@ static void quit(int signum){
 }
 
 static int returnfromPlayer(int fromPlayer){
+	//keep track of fromPlayer
 	static int fromPlay = 0;
 	fromPlay += fromPlayer;
 	return fromPlay;
@@ -273,6 +288,7 @@ static int returnfromPlayer(int fromPlayer){
 }
 
 static int returnindex(int index){
+	//keep track of index
 	static int myindex = 0;
 	myindex += index;
 	return myindex;
@@ -280,6 +296,7 @@ static int returnindex(int index){
 }
 
 int random_index(){
+	//generate a random index
 	int randomIndex;
 	int randFile = open("/dev/random", O_RDONLY, 0);
 	read(randFile, &randomIndex, sizeof(int));
@@ -296,6 +313,10 @@ int random_index(){
 
 
 int playerhandshake(int* fromPlayer){
+	//player side of handshake
+	//create ServerToPlayer pipe 
+
+
 	int toPlayer;
 	mkfifo("ServerToPlayer", 0666);
 	chmod("ServerToPlayer", 0666);

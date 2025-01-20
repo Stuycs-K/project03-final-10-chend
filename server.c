@@ -222,7 +222,7 @@ int main(){
 			
 	
 			
-			//if there are two winners, match them up
+			//if there are two winners, match them up with remakeconnections()
 			remakeconnections(listofconnections2);
 			int numplayers = 0;
 			int lastmatch = 0;
@@ -288,7 +288,7 @@ int main(){
 
 			}
 			//once select returns, check each potential desc with FD_ISSET
-			
+			//SEE H FILE FOR MORE INFORMATION ON WHAT EACH MESSAGE MEANS
 			for(int i = 0; i < 4; i ++){
 				struct connection* con = listofconnections2[i];
 				struct message* msg = malloc(sizeof(struct message));
@@ -458,7 +458,7 @@ int main(){
 
 					}
 					if(strcmp(msg -> servermsg, "won") == 0){
-						//SET WINNER HERE
+						//set winner file desc to the player's 
 
 
 						con -> toWinner = con -> toPlayer2;
@@ -583,7 +583,7 @@ int main(){
 					else if(strcmp(msg -> servermsg, "draw") == 0){
 
 						//draw
-						
+						//resend go1 to start the game again
 
 						strcpy(newmsg -> servermsg, "draw");
 						newmsg -> value = msg -> value;
