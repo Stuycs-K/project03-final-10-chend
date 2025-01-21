@@ -87,4 +87,8 @@ Finished polishing print statements - 30 min
 Added management of players before game starts - 30 min
 Added comments for server functions - 15 min
 
+### 2024-01-20 - Finished Project
+Finished comments, updated proposal, and updated readme - 50 min
+Finished with video - 20 min
+Revised a few print statements - 10 min
 

@@ -7,14 +7,14 @@ David Chen
 # Intentions:
 
 A statement of the problem you are solving and/or a high level description of the project.
-I plan on creating a 1v1 rock-paper-scissors game between many players at once. The eight players will be playing in a tournament with random matchmaking involved. Using pipes, I will manage each player with a server and decide the winners and losers of each game. The tournament will end once the final winner has been decided.
+I plan on creating a 1v1 rock-paper-scissors game between many players at once. The eight players will be playing in a tournament with random matchmaking involved. Using pipes, I will manage each player with a server and decide the winners and losers of each game. The tournament will end once the final winner has been decided. The main problem that I will be solving is the management of many players and how each turn is handled(win, loss, draw). Some of the other issues I will face are random matchmaking of the players and handling the signals(player disconnection).
 
 
 
 
 # Intended usage:
 
-The server and the player runs "make compile" before the game setup. The server calls "make main" and waits until eight players have joined. After eight players join the tournament via "make play", the game starts, showing the player their index and the index of their opponent. Once one player wins, they will wait until the following bracket is filled in with another player, and a new game starts. The player will continue playing until they lose or win the tournament, which closes their program. 
+The server and the player runs "make compile" before the game setup. The server calls "make main" and waits until eight players have joined. After eight players join the tournament via "make play", the game starts, showing the player their index and the index of their opponent. A player will either be prompted to enter in a choice(1(rock), 2(paper) or 3(scissors)), or to wait for their opponent to enter a choice. Each action will be recorded into "history.txt" and printed by the server. Once one player wins, they will wait until the following bracket is filled in with another player, and a new game starts. The player will continue playing until they lose or win the tournament, eventually closing their program.
   
 # Technical Details:
 

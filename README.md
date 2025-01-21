@@ -7,7 +7,7 @@ David Chen
        
 ### Project Description:
 
-The tournament starts off waiting for an even number of players(still determining) and matchmakes those players into a tournament system. There will be one winner decided by rock paper scissors.
+The tournament starts off waiting eight players and then matchmakes those players into a tournament system. There will be one winner decided by rock paper scissors.
   
 ### Instructions:
 
@@ -25,3 +25,4 @@ The server will have each action printed onto their terminal, along with a file 
 
 
 Video:
+https://drive.google.com/file/d/1CEEQMmAi8HxNJusTG9ebabH51xaStS27/view?usp=drive_link 
